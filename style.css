@@ -1,0 +1,161 @@
+:root {
+  --bg: #f9f9f8;
+  --surface: #ffffff;
+  --surface-2: #f5f5f0;
+  --border: #e5e5e0;
+  --border-strong: #ddddd8;
+  --text-1: #1a1a18;
+  --text-2: #4a4a46;
+  --text-3: #6b6b66;
+  --text-4: #9a9a94;
+
+  --green: #1D9E75;
+  --green-deep: #0F6E56;
+  --green-soft: #E1F5EE;
+  --green-bg: #f0faf6;
+
+  --amber: #EF9F27;
+  --amber-deep: #854F0B;
+  --amber-soft: #FAEEDA;
+  --amber-bg: #fef9ee;
+
+  --purple: #7F77DD;
+  --purple-deep: #3C3489;
+  --purple-soft: #EEEDFE;
+
+  --teal-soft: #E1F5EE;
+  --teal-deep: #085041;
+
+  --coral-soft: #FAECE7;
+  --coral-deep: #4A1B0C;
+
+  --red-soft: #FCEBEB;
+  --red: #E24B4A;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 -2px 24px rgba(0,0,0,0.06);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a18;
+    --surface: #242422;
+    --surface-2: #2e2e2c;
+    --border: #3a3a38;
+    --border-strong: #4a4a48;
+    --text-1: #f0f0eb;
+    --text-2: #d0d0cb;
+    --text-3: #9a9a94;
+    --text-4: #6b6b66;
+
+    --green: #5DCAA5;
+    --green-deep: #3FA683;
+    --green-soft: #04342C;
+    --green-bg: #08251f;
+
+    --amber: #F5B341;
+    --amber-deep: #FAC775;
+    --amber-soft: #412402;
+    --amber-bg: #2a1a05;
+
+    --purple: #AFA9EC;
+    --purple-deep: #CECBF6;
+    --purple-soft: #26215C;
+
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 -2px 24px rgba(0,0,0,0.4);
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── SHARED BUTTONS ──────────────────────────────────────────── */
+.btn {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 7px;
+  transition: all 0.12s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn:hover { background: var(--surface-2); color: var(--text-1); }
+.btn-primary {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+  font-weight: 500;
+}
+.btn-primary:hover { background: var(--green-deep); border-color: var(--green-deep); }
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: var(--surface-2); border-color: var(--border); }
+
+/* ─── SHARED TOPBAR ───────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(249, 249, 248, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 0.5px solid var(--border);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  .topbar { background: rgba(26, 26, 24, 0.88); }
+}
+
+.topbar-brand {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  letter-spacing: -0.2px;
+  text-decoration: none;
+}
+.topbar-brand span {
+  font-weight: 400;
+  color: var(--text-4);
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+/* ─── PHASE PILLS ─────────────────────────────────────────────── */
+.phase-pill {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.phase-pill.p1 { background: var(--purple-soft); color: var(--purple-deep); }
+.phase-pill.p2 { background: var(--teal-soft); color: var(--teal-deep); }
+.phase-pill.p3 { background: var(--amber-soft); color: var(--amber-deep); }
+.phase-pill.p4 { background: var(--coral-soft); color: var(--coral-deep); }
+.phase-pill.p5 { background: var(--green-soft); color: var(--green-deep); }
+
+@media (max-width: 640px) {
+  .topbar { padding: 12px 16px; }
+}

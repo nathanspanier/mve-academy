@@ -1,0 +1,145 @@
+{
+  "id": "m0",
+  "title": "Environment Setup",
+  "phase": "Phase 1 — Infrastructure",
+  "phaseColor": "purple",
+  "estimate": "45–90 min",
+  "prereqs": "None",
+  "briefing": {
+    "headline": "Set up the foundation. Once. Properly.",
+    "body": [
+      "Your Mac shipped with Terminal.app and zsh. Terminal.app is fine — we're swapping it for iTerm2, which is better in every measurable way. zsh stays. What your Mac didn't ship with: Homebrew, the Mac package manager. Every developer tool you'll use installs through it.",
+      "This isn't a module. It's a prerequisite. Mostly waiting for installers. Do it once, do it right, never think about it again."
+    ]
+  },
+  "reference": [
+    {
+      "title": "Verify your setup",
+      "type": "code",
+      "content": "brew --version       # Homebrew is installed\ngit --version        # Git is installed\necho $SHELL          # Should return /bin/zsh"
+    },
+    {
+      "title": "Homebrew basics — you'll use these constantly",
+      "type": "code",
+      "content": "brew install <name>   Install a package\nbrew update           Update Homebrew itself\nbrew upgrade          Upgrade everything installed\nbrew list             See everything installed\nbrew doctor           Diagnose problems"
+    },
+    {
+      "title": "Where Homebrew lives",
+      "type": "text",
+      "content": "<strong>Apple Silicon</strong> (M1/M2/M3/M4): <code>/opt/homebrew/bin/</code><br><strong>Intel</strong>: <code>/usr/local/bin/</code><br>If your Mac is from 2020 or later, you almost certainly have Apple Silicon."
+    },
+    {
+      "title": "\"command not found: brew\"",
+      "type": "text",
+      "content": "You're on Apple Silicon and didn't run the two PATH commands the installer printed (Step 4). Run them, then close and reopen iTerm2."
+    },
+    {
+      "title": "\"command not found: git\" after brew install",
+      "type": "text",
+      "content": "Close and reopen iTerm2. Shell needs to reload."
+    }
+  ],
+  "completion": {
+    "headline": "M0 complete.",
+    "body": "Your environment is ready. Next up: M1 — Terminal Fundamentals.",
+    "nextModule": "m1"
+  },
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Install iTerm2",
+      "estimate": "5 min",
+      "body": "iTerm2 replaces Terminal.app. Better color, split panes, search, click-to-open URLs. Free. No account.",
+      "notes": [
+        "Go to iterm2.com and click Download",
+        "Open the downloaded .zip — iTerm2 appears",
+        "Drag iTerm2 into your Applications folder",
+        "Open iTerm2: Cmd + Space → \"iTerm2\" → Enter",
+        "If macOS asks to confirm a downloaded app: click Open"
+      ],
+      "verify": "iTerm2 is open. Close Terminal.app — you won't be using it again."
+    },
+    {
+      "id": "s2",
+      "title": "Confirm iTerm2 works",
+      "estimate": "< 1 min",
+      "body": "Type a command. If it prints back, you're in business.",
+      "code": "echo \"iTerm2 is working\"",
+      "verify": "Output: <code>iTerm2 is working</code>"
+    },
+    {
+      "id": "s3",
+      "title": "Install Homebrew",
+      "estimate": "15–30 min",
+      "body": "The Mac package manager. Paste the command below — the whole thing as one line — into iTerm2 and press Enter.",
+      "code": "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"",
+      "notes": [
+        "macOS will ask for your password. Type it. Nothing appears as you type — that is normal. Press Enter.",
+        "If asked to install Xcode Command Line Tools: press Enter to confirm. Several minutes of waiting.",
+        "Wait for \"==> Installation successful!\" — the installer prints a lot of output. That is fine."
+      ],
+      "verify": "You see <strong>Installation successful!</strong> in the output."
+    },
+    {
+      "id": "s4",
+      "title": "Configure Homebrew PATH",
+      "estimate": "1 min",
+      "tag": "Apple Silicon only",
+      "tagOptional": false,
+      "body": "On Apple Silicon (M1/M2/M3/M4), Homebrew installs to <code>/opt/homebrew/bin</code> — which isn't on your PATH yet. The installer printed two commands to run. Run them now, copying exactly from your terminal output.<br><br>Intel Macs: skip this step. The installer handles it.",
+      "code": "echo 'eval \"$(/opt/homebrew/bin/brew shellenv)\"' >> ~/.zprofile\neval \"$(/opt/homebrew/bin/brew shellenv)\"",
+      "verify": "Both commands run with no output and no errors."
+    },
+    {
+      "id": "s5",
+      "title": "Restart iTerm2",
+      "estimate": "< 1 min",
+      "body": "Close iTerm2 completely (Cmd + Q) and reopen. This forces the shell to reload the new PATH settings.",
+      "verify": "iTerm2 is open in a fresh window."
+    },
+    {
+      "id": "s6",
+      "title": "Verify Homebrew",
+      "estimate": "< 1 min",
+      "body": "Confirm <code>brew</code> is installed and on your PATH.",
+      "code": "brew --version",
+      "verify": "Output: <code>Homebrew 4.x.x</code> (version number will vary)",
+      "trouble": "If \"<code>command not found: brew</code>\" — you skipped Step 4 or didn't restart iTerm2 in Step 5. Go back."
+    },
+    {
+      "id": "s7",
+      "title": "Install Git",
+      "estimate": "2 min",
+      "body": "Your Mac has a Git built in. It is old. Replace it with the Homebrew version.",
+      "code": "brew install git",
+      "verify": "Wait for the install to finish. No errors at the end."
+    },
+    {
+      "id": "s8",
+      "title": "Verify Git",
+      "estimate": "< 1 min",
+      "body": "Confirm the new Git is what runs when you type \"git\".",
+      "code": "git --version",
+      "verify": "Output: <code>git version 2.x.x</code>"
+    },
+    {
+      "id": "s9",
+      "title": "Verify your shell is zsh",
+      "estimate": "< 1 min",
+      "body": "Modern macOS defaults to zsh, but worth confirming before moving on.",
+      "code": "echo $SHELL",
+      "verify": "Output: <code>/bin/zsh</code>",
+      "trouble": "If it returns <code>bash</code>: run <code>chsh -s /bin/zsh</code> and reopen iTerm2."
+    },
+    {
+      "id": "s10",
+      "title": "Install Oh My Zsh",
+      "estimate": "5 min",
+      "tag": "Optional",
+      "tagOptional": true,
+      "body": "A framework that makes your prompt more informative and adds shortcuts. Many devs use it. Skip if you want simplicity — you can come back any time.",
+      "code": "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"",
+      "verify": "Your prompt looks different after restart. That's the point."
+    }
+  ]
+}

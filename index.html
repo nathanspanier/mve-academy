@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MVE Academy</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+body { min-height: 100vh; }
+
+/* ─── TOPBAR ──────────────────────────────────────────────────── */
+.tb-left { display: flex; align-items: center; gap: 10px; }
+.tb-right { display: flex; align-items: center; gap: 16px; }
+.overall-prog { display: flex; align-items: center; gap: 10px; }
+.overall-prog-text { font-size: 12px; color: var(--text-3); }
+.overall-prog-text strong { color: var(--text-1); }
+.overall-bar { width: 120px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.overall-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
+
+/* ─── HERO ────────────────────────────────────────────────────── */
+.hero {
+  max-width: 720px; margin: 0 auto;
+  padding: 48px 24px 40px;
+  border-bottom: 0.5px solid var(--border);
+}
+.hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-4); margin-bottom: 12px; }
+.hero h1 { font-size: 32px; font-weight: 500; letter-spacing: -0.8px; color: var(--text-1); margin-bottom: 10px; line-height: 1.15; }
+.hero p { font-size: 15px; color: var(--text-2); line-height: 1.6; max-width: 480px; }
+.hero-stats { display: flex; gap: 28px; margin-top: 24px; }
+.hero-stat { }
+.hero-stat-val { font-size: 20px; font-weight: 500; color: var(--text-1); }
+.hero-stat-label { font-size: 11px; color: var(--text-4); margin-top: 1px; }
+
+/* ─── MAIN CONTENT ────────────────────────────────────────────── */
+.content { max-width: 720px; margin: 0 auto; padding: 40px 24px 64px; }
+
+/* ─── PHASE SECTION ───────────────────────────────────────────── */
+.phase-section { margin-bottom: 40px; }
+.phase-section:last-child { margin-bottom: 0; }
+
+.phase-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; padding-bottom: 12px;
+  border-bottom: 0.5px solid var(--border);
+}
+.phase-header-left { display: flex; align-items: center; gap: 10px; }
+.phase-title { font-size: 14px; font-weight: 500; color: var(--text-1); }
+.phase-meta { font-size: 12px; color: var(--text-4); }
+
+/* ─── MODULE CARDS ────────────────────────────────────────────── */
+.module-card {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  position: relative;
+}
+.module-card:last-child { margin-bottom: 0; }
+.module-card.clickable:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+.module-card.locked { opacity: 0.5; cursor: default; }
+
+.mod-indicator {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+.mod-indicator.done { background: var(--green); border-color: var(--green); color: white; }
+.mod-indicator.in-progress { background: var(--amber-soft); border-color: var(--amber); color: var(--amber-deep); }
+
+.mod-info { flex: 1; min-width: 0; }
+.mod-id { font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-4); margin-bottom: 3px; }
+.mod-title { font-size: 14px; font-weight: 500; color: var(--text-1); margin-bottom: 3px; }
+.mod-desc { font-size: 12px; color: var(--text-3); line-height: 1.5; }
+
+.mod-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+.mod-time { font-size: 11px; color: var(--text-4); white-space: nowrap; }
+.mod-status { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 99px; }
+.mod-status.done { background: var(--green-soft); color: var(--green-deep); }
+.mod-status.in-progress { background: var(--amber-soft); color: var(--amber-deep); }
+.mod-status.not-started { background: var(--surface-2); color: var(--text-4); display: none; }
+.mod-status.locked { background: var(--surface-2); color: var(--text-4); }
+
+/* Mini-build callout */
+.mini-build {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-top: 12px; padding: 10px 14px;
+  border: 0.5px dashed var(--border-strong);
+  border-radius: 8px;
+  background: var(--amber-bg);
+}
+.mini-build-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.mini-build-text { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+.mini-build-text strong { color: var(--amber-deep); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .hero { padding: 32px 16px 28px; }
+  .hero h1 { font-size: 26px; }
+  .content { padding: 28px 16px 48px; }
+  .mod-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="tb-left">
+    <a href="index.html" class="topbar-brand">MVE Academy <span>Minimum Viable Engineer</span></a>
+  </div>
+  <div class="tb-right">
+    <div class="overall-prog">
+      <span class="overall-prog-text"><strong id="completed-count">0</strong> / <span id="total-modules">16</span> modules</span>
+      <div class="overall-bar"><div class="overall-fill" id="overall-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">The course</div>
+  <h1>From PM to<br>Minimum Viable Engineer.</h1>
+  <p>16 modules. 5 phases. ~72 hours. You'll ship real things, not just read about how they work.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-val">16</div>
+      <div class="hero-stat-label">Modules</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">5</div>
+      <div class="hero-stat-label">Phases</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">~72h</div>
+      <div class="hero-stat-label">Total</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val" id="hero-pct">0%</div>
+      <div class="hero-stat-label">Complete</div>
+    </div>
+  </div>
+</section>
+
+<main class="content" id="course-content">
+  <!-- Rendered by JS -->
+</main>
+
+<script src="js/app.js"></script>
+<script>
+// ─── SYLLABUS DATA (inline to avoid extra fetch on home) ───────
+// Loaded from syllabus.json at runtime
+
+async function initHome() {
+  let syllabus;
+  try {
+    const res = await fetch('data/syllabus.json');
+    syllabus = await res.json();
+  } catch (e) {
+    document.getElementById('course-content').innerHTML = '<p style="padding:40px;color:#999">Could not load syllabus. Make sure you\'re running a local server (not opening the file directly).</p>';
+    return;
+  }
+
+  const progress = loadProgress();
+  const moduleIds = Object.keys(syllabus.modules);
+
+  // Compute overall progress
+  let completedModules = 0;
+  moduleIds.forEach(id => {
+    const mod = syllabus.modules[id];
+    const modProgress = progress[id] || { done: {} };
+    const doneCount = Object.values(modProgress.done || {}).filter(Boolean).length;
+    // Count optional steps from module data if available
+    const optionalCount = 1; // Oh My Zsh in M0 — hardcoded for now, will come from JSON later
+    const requiredTotal = mod.hours > 0 ? (doneCount > 0 ? 1 : 0) : 0; // simplified
+    if (doneCount > 0) completedModules++;
+  });
+
+  const totalMods = moduleIds.length;
+  const pct = Math.round(completedModules / totalMods * 100);
+  document.getElementById('completed-count').textContent = completedModules;
+  document.getElementById('total-modules').textContent = totalMods;
+  document.getElementById('overall-fill').style.width = pct + '%';
+  document.getElementById('hero-pct').textContent = pct + '%';
+
+  // Render phases
+  const content = document.getElementById('course-content');
+  let html = '';
+
+  const phaseColorMap = {
+    purple: 'p1', teal: 'p2', amber: 'p3', coral: 'p4', green: 'p5'
+  };
+
+  syllabus.phases.forEach(phase => {
+    const pillClass = phaseColorMap[phase.color] || 'p1';
+    html += `<div class="phase-section">
+      <div class="phase-header">
+        <div class="phase-header-left">
+          <span class="phase-pill ${pillClass}">${phase.title}</span>
+        </div>
+        <span class="phase-meta">${phase.hours}h · ${phase.weeks}</span>
+      </div>`;
+
+    phase.modules.forEach(modId => {
+      const mod = syllabus.modules[modId];
+      if (!mod) return;
+
+      const modProgress = progress[modId] || { done: {}, currentIdx: 0 };
+      const doneCount = Object.values(modProgress.done || {}).filter(Boolean).length;
+      const isComplete = mod.status === 'ready' && doneCount > 0 && modProgress.currentIdx >= 999;
+
+      // Determine status
+      let statusLabel = '';
+      let statusClass = '';
+      let indicatorClass = '';
+      let indicatorContent = mod.id.replace('m', '').toUpperCase();
+
+      if (mod.status !== 'ready') {
+        statusLabel = 'Coming soon';
+        statusClass = 'locked';
+      } else if (doneCount === 0) {
+        statusLabel = '';
+        statusClass = 'not-started';
+      } else {
+        // Has some progress — check if complete by looking at currentIdx
+        const isModComplete = modProgress.currentIdx >= 10; // M0 has 10 steps
+        if (isModComplete) {
+          statusLabel = 'Complete';
+          statusClass = 'done';
+          indicatorClass = 'done';
+          indicatorContent = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        } else {
+          statusLabel = 'In progress';
+          statusClass = 'in-progress';
+          indicatorClass = 'in-progress';
+        }
+      }
+
+      const isClickable = mod.status === 'ready';
+      const cardTag = isClickable ? `<a href="module.html?id=${mod.id}" class="module-card clickable">` : `<div class="module-card locked">`;
+      const cardClose = isClickable ? '</a>' : '</div>';
+
+      html += `${cardTag}
+        <div class="mod-indicator ${indicatorClass}">${indicatorContent}</div>
+        <div class="mod-info">
+          <div class="mod-id">${mod.id.toUpperCase()}</div>
+          <div class="mod-title">${mod.title}</div>
+          <div class="mod-desc">${mod.desc}</div>
+        </div>
+        <div class="mod-right">
+          <span class="mod-time">${mod.hours}h</span>
+          ${statusLabel ? `<span class="mod-status ${statusClass}">${statusLabel}</span>` : ''}
+        </div>
+      ${cardClose}`;
+    });
+
+    // Mini-build
+    if (phase.miniBuild) {
+      html += `<div class="mini-build">
+        <div class="mini-build-icon">⚡</div>
+        <div class="mini-build-text"><strong>Mini-build:</strong> ${phase.miniBuild}</div>
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  content.innerHTML = html;
+}
+
+initHome();
+</script>
+</body>
+</html>

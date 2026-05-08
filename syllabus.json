@@ -1,0 +1,199 @@
+{
+  "title": "MVE Academy",
+  "subtitle": "Minimum Viable Engineer — a course for PMs who need to ship.",
+  "totalHours": 72,
+  "totalWeeks": "5–6 weeks at 2 hrs/day",
+  "phases": [
+    {
+      "id": "p1",
+      "title": "Phase 1 — Infrastructure",
+      "color": "purple",
+      "hours": 22,
+      "weeks": "~2 weeks",
+      "miniBuild": "A project folder, committed to GitHub. Your first real repo.",
+      "modules": ["m0", "m1", "m2", "m3"]
+    },
+    {
+      "id": "p2",
+      "title": "Phase 2 — The Language Layer",
+      "color": "teal",
+      "hours": 14,
+      "weeks": "~1 week",
+      "miniBuild": "A Node script that calls a free API and prints results to your terminal.",
+      "modules": ["m4", "m5", "m6"]
+    },
+    {
+      "id": "p3",
+      "title": "Phase 3 — The Web Layer",
+      "color": "amber",
+      "hours": 12,
+      "weeks": "~1 week",
+      "miniBuild": "A working local web app that reads from an API and shows data on screen.",
+      "modules": ["m7", "m8", "m9"]
+    },
+    {
+      "id": "p4",
+      "title": "Phase 4 — Directing Claude",
+      "color": "coral",
+      "hours": 12,
+      "weeks": "~1 week",
+      "miniBuild": "You spec and ship a small feature using only Claude as your dev.",
+      "modules": ["m10", "m11", "m12"]
+    },
+    {
+      "id": "p5",
+      "title": "Phase 5 — Shipping",
+      "color": "green",
+      "hours": 12,
+      "weeks": "~1 week",
+      "miniBuild": "Something real. Live on the internet.",
+      "modules": ["m13", "m14", "m15"]
+    }
+  ],
+  "modules": {
+    "m0": {
+      "id": "m0",
+      "title": "Environment Setup",
+      "desc": "iTerm2, Homebrew, verify everything works. Day zero.",
+      "hours": 2,
+      "phase": "p1",
+      "status": "ready",
+      "unlocked": true
+    },
+    "m1": {
+      "id": "m1",
+      "title": "Terminal Fundamentals",
+      "desc": "Navigation, files, processes, paths, errors, environment.",
+      "hours": 8,
+      "phase": "p1",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m2": {
+      "id": "m2",
+      "title": "VS Code",
+      "desc": "Setup, extensions, integrated terminal, basic editing workflow.",
+      "hours": 3,
+      "phase": "p1",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m3": {
+      "id": "m3",
+      "title": "Git & GitHub",
+      "desc": "Version control, commits, branches, push/pull, .gitignore. Why this is non-negotiable.",
+      "hours": 8,
+      "phase": "p1",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m4": {
+      "id": "m4",
+      "title": "JavaScript for Directors",
+      "desc": "Read it, don't write it. Variables, functions, objects, arrays, async/await.",
+      "hours": 6,
+      "phase": "p2",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m5": {
+      "id": "m5",
+      "title": "Node.js & npm",
+      "desc": "How code runs outside the browser. Require, scripts, package.json.",
+      "hours": 4,
+      "phase": "p2",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m6": {
+      "id": "m6",
+      "title": "JSON",
+      "desc": "Structure, parsing, writing. The format everything on the web is built on.",
+      "hours": 2,
+      "phase": "p2",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m7": {
+      "id": "m7",
+      "title": "APIs & HTTP",
+      "desc": "Requests, responses, GET/POST/PUT/DELETE, status codes, headers.",
+      "hours": 4,
+      "phase": "p3",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m8": {
+      "id": "m8",
+      "title": "React Basics",
+      "desc": "Components, props, state, hooks. Enough to read and direct.",
+      "hours": 6,
+      "phase": "p3",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m9": {
+      "id": "m9",
+      "title": "Reading Documentation",
+      "desc": "How to navigate API docs, find examples, and extract what you need.",
+      "hours": 2,
+      "phase": "p3",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m10": {
+      "id": "m10",
+      "title": "Debugging Without Panicking",
+      "desc": "Reading errors, isolating problems, describing issues to Claude so it actually helps.",
+      "hours": 3,
+      "phase": "p4",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m11": {
+      "id": "m11",
+      "title": "Prompting for Engineers",
+      "desc": "Context, constraints, iteration. The skill that makes this whole thing work.",
+      "hours": 4,
+      "phase": "p4",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m12": {
+      "id": "m12",
+      "title": "First Real Build",
+      "desc": "End-to-end: prompt → code → run → debug → working app. This is what everything was for.",
+      "hours": 6,
+      "phase": "p4",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m13": {
+      "id": "m13",
+      "title": "Deployment",
+      "desc": "Vercel or Railway, environment variables in production, getting a URL you can share.",
+      "hours": 4,
+      "phase": "p5",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m14": {
+      "id": "m14",
+      "title": "Integrations & Webhooks",
+      "desc": "Two services talking to each other automatically. Event-driven architecture basics.",
+      "hours": 4,
+      "phase": "p5",
+      "status": "coming-soon",
+      "unlocked": false
+    },
+    "m15": {
+      "id": "m15",
+      "title": "Capstone — Ship Something Real",
+      "desc": "Live on the internet. TBD once you pick your project.",
+      "hours": 3,
+      "phase": "p5",
+      "status": "coming-soon",
+      "unlocked": false
+    }
+  }
+}
