@@ -1,0 +1,199 @@
+{
+  "id": "m2",
+  "title": "VS Code",
+  "phase": "Phase 1 — Infrastructure",
+  "phaseColor": "purple",
+  "estimate": "1–2 hr",
+  "prereqs": "M0 complete",
+  "briefing": {
+    "headline": "Pick the editor everyone else uses.",
+    "body": [
+      "VS Code is the editor. Free, fast, the most popular editor among working developers by a wide margin. Cursor is built on top of it. The keyboard shortcuts you learn here transfer to most other editors you'll ever touch.",
+      "Setup is fast. What takes longer — and what this module barely touches — is internalizing the shortcuts. Don't worry about that yet. Get it installed, get the integrated terminal working, learn the Command Palette. The rest you'll pick up by using it."
+    ]
+  },
+  "reference": [
+    {
+      "title": "Essential keyboard shortcuts",
+      "type": "code",
+      "content": "Cmd + P              Quick file open\nCmd + Shift + P      Command Palette\nCmd + B              Toggle sidebar\nCmd + `              Toggle terminal\nCmd + /              Comment current line\nCmd + D              Select next match (multi-cursor)\nCmd + Shift + F      Search across files\nCmd + ,              Open settings"
+    },
+    {
+      "title": "What the Command Palette is",
+      "type": "text",
+      "content": "<strong>Cmd + Shift + P</strong> opens a search bar that runs every command in VS Code — including ones added by extensions. If you can't remember a keyboard shortcut, type what you want here. This is the most useful single shortcut in the editor."
+    },
+    {
+      "title": "Open from the terminal",
+      "type": "code",
+      "content": "code .              Open current directory in VS Code\ncode myfile.js      Open one file\ncode ~/projects     Open a specific folder"
+    },
+    {
+      "title": "Extensions worth installing",
+      "type": "text",
+      "content": "<strong>Prettier</strong> — automatic code formatting. <strong>GitLens</strong> — see who wrote any line and when. <strong>ESLint</strong> — catches common JavaScript mistakes (install when you start writing JS). Skip everything else until you have a reason to install it."
+    },
+    {
+      "title": "\"command not found: code\"",
+      "type": "text",
+      "content": "You skipped the \"Install the code command\" step, or didn't restart your terminal after. Open the Command Palette (<strong>Cmd + Shift + P</strong>) and run <strong>Shell Command: Install 'code' command in PATH</strong>. Then close and reopen iTerm2."
+    }
+  ],
+  "completion": {
+    "headline": "M2 complete.",
+    "body": "You have a working editor with terminal, extensions, and shortcuts. Next up: M3 — Git & GitHub.",
+    "nextModule": "m3"
+  },
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Install VS Code",
+      "estimate": "5 min",
+      "body": "Free, official, made by Microsoft. Don't pay for anything else.",
+      "notes": [
+        "Go to code.visualstudio.com and click <strong>Download for Mac</strong>",
+        "Open the downloaded .zip — Visual Studio Code appears",
+        "Drag Visual Studio Code into your Applications folder",
+        "Open it: Cmd + Space → \"Visual Studio Code\" → Enter",
+        "If macOS asks to confirm a downloaded app: click Open"
+      ],
+      "verify": "VS Code is open. You see a Welcome tab."
+    },
+    {
+      "id": "s2",
+      "title": "Install the code command",
+      "estimate": "3 min",
+      "body": "Adds a <code>code</code> command to your terminal. Now you can open any folder in VS Code with one command from iTerm2.",
+      "notes": [
+        "In VS Code, press <strong>Cmd + Shift + P</strong> to open the Command Palette",
+        "Type: <code>shell command</code>",
+        "Click <strong>Shell Command: Install 'code' command in PATH</strong>",
+        "Enter your Mac password if prompted"
+      ],
+      "verify": "Open iTerm2 and run <code>code --version</code>. It prints a version number.",
+      "trouble": "If <code>command not found: code</code> — close and reopen iTerm2. Shell needs to reload."
+    },
+    {
+      "id": "s3",
+      "title": "Open a folder from the terminal",
+      "estimate": "5 min",
+      "body": "The most common way to start work: <code>cd</code> into a folder, then <code>code .</code> to open it. The dot means \"current directory.\"",
+      "code": "cd ~\nmkdir vscode-practice\ncd vscode-practice\ncode .",
+      "verify": "VS Code opens with <code>vscode-practice</code> as the project folder. The Explorer (left sidebar) shows it's empty."
+    },
+    {
+      "id": "s4",
+      "title": "Tour the interface",
+      "estimate": "10 min",
+      "body": "Five regions to know.",
+      "notes": [
+        "<strong>Activity Bar</strong> (far left, vertical icons): switch between Explorer, Search, Source Control, Run, Extensions.",
+        "<strong>Side Bar</strong>: contents of whichever Activity Bar icon is selected — usually the Explorer (your file tree).",
+        "<strong>Editor</strong> (center): where you edit files. Multiple tabs.",
+        "<strong>Panel</strong> (bottom, hidden until needed): integrated terminal, problems, output. Toggle with <strong>Cmd + `</strong>.",
+        "<strong>Status Bar</strong> (very bottom): current branch, errors, file encoding, line and column."
+      ],
+      "verify": "You can identify each region. Toggle the sidebar with <strong>Cmd + B</strong> and the panel with <strong>Cmd + `</strong>."
+    },
+    {
+      "id": "s5",
+      "title": "Use the integrated terminal",
+      "estimate": "10 min",
+      "body": "VS Code has a terminal built in. Same zsh, same Homebrew, same everything as iTerm2 — just inside the editor. Most developers stop using their separate terminal app for project work and live here.",
+      "notes": [
+        "Press <strong>Cmd + `</strong> to open the terminal panel.",
+        "Run <code>pwd</code> — it prints the path to <code>vscode-practice</code>.",
+        "Run <code>touch hello.js</code> — the file appears in the Explorer immediately.",
+        "Click <code>hello.js</code> in the Explorer to open it in the editor."
+      ],
+      "verify": "<code>hello.js</code> exists, is visible in the Explorer, and is open in the editor."
+    },
+    {
+      "id": "s6",
+      "title": "Command Palette",
+      "estimate": "10 min",
+      "body": "<strong>Cmd + Shift + P</strong>. Single most useful shortcut in VS Code. Every command — built-in or from extensions — is searchable here. When you don't know a shortcut, type what you want.",
+      "notes": [
+        "Press <strong>Cmd + Shift + P</strong>.",
+        "Type \"format\" — see all formatting commands.",
+        "Press Escape.",
+        "Press <strong>Cmd + Shift + P</strong> again, type \"theme\", select <strong>Color Theme</strong>, pick one. Try Default Dark Modern or one of the Light themes."
+      ],
+      "verify": "VS Code's color theme has changed."
+    },
+    {
+      "id": "s7",
+      "title": "Quick file open",
+      "estimate": "5 min",
+      "body": "<strong>Cmd + P</strong> opens any file in the project by name. Fuzzy-matched — type a few letters and it finds it. Use this instead of clicking through the Explorer once a project gets bigger than a handful of files.",
+      "notes": [
+        "Press <strong>Cmd + P</strong>.",
+        "Type <code>hello</code>.",
+        "Press Enter to open <code>hello.js</code>."
+      ],
+      "verify": "<code>hello.js</code> opens in the editor."
+    },
+    {
+      "id": "s8",
+      "title": "Multi-cursor",
+      "estimate": "10 min",
+      "body": "Edit multiple places at once. <strong>Cmd + D</strong> selects the next occurrence of whatever you've highlighted — keep pressing to add more. Then type once and it changes everywhere.",
+      "notes": [
+        "Open <code>hello.js</code>.",
+        "Type these three lines:<br><code>let foo = 1;</code><br><code>let foo = 2;</code><br><code>let foo = 3;</code>",
+        "Double-click one of the <code>foo</code>s to select it.",
+        "Press <strong>Cmd + D</strong> twice — the next two <code>foo</code>s are also selected.",
+        "Type <code>bar</code> — all three change at once.",
+        "Press Escape to exit multi-cursor."
+      ],
+      "verify": "All three lines now say <code>let bar = N;</code>."
+    },
+    {
+      "id": "s9",
+      "title": "Search across files",
+      "estimate": "5 min",
+      "body": "<strong>Cmd + Shift + F</strong> searches every file in the project. Different from <strong>Cmd + F</strong>, which searches only the current file.",
+      "notes": [
+        "Press <strong>Cmd + Shift + F</strong>.",
+        "Type <code>bar</code>.",
+        "Click a result to jump to it."
+      ],
+      "verify": "Search panel shows matches with file names. Clicking a match jumps you to the line."
+    },
+    {
+      "id": "s10",
+      "title": "Install essential extensions",
+      "estimate": "15 min",
+      "body": "Extensions add features. The two below are nearly universal — most developers run both.",
+      "notes": [
+        "Click the Extensions icon in the Activity Bar (square with one block detached) — or press <strong>Cmd + Shift + X</strong>.",
+        "Search <strong>Prettier - Code formatter</strong>. Install the one by Prettier.",
+        "Search <strong>GitLens</strong>. Install the one by GitKraken.",
+        "Restart VS Code if prompted."
+      ],
+      "verify": "Both extensions show \"Uninstall\" instead of \"Install\" — meaning they're active."
+    },
+    {
+      "id": "s11",
+      "title": "Format on save",
+      "estimate": "5 min",
+      "body": "Have Prettier reformat your code automatically every time you save. Stops you from arguing with yourself about whitespace.",
+      "notes": [
+        "Open settings: <strong>Cmd + ,</strong>.",
+        "Search <code>format on save</code>.",
+        "Check the <strong>Editor: Format On Save</strong> box.",
+        "Search <code>default formatter</code>.",
+        "Set <strong>Editor: Default Formatter</strong> to <strong>Prettier - Code formatter</strong>."
+      ],
+      "verify": "Open <code>hello.js</code>, mess up the indentation, save (<strong>Cmd + S</strong>) — Prettier fixes it."
+    },
+    {
+      "id": "s12",
+      "title": "Clean up",
+      "estimate": "2 min",
+      "body": "Delete the practice folder. The Welcome tab is enough — you don't need a leftover empty project sitting in your home directory.",
+      "code": "cd ~\nrm -r vscode-practice",
+      "verify": "Folder is gone. Close the VS Code window — the project is no longer accessible."
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "id": "m3",
+  "title": "Git & GitHub",
+  "phase": "Phase 1 — Infrastructure",
+  "phaseColor": "purple",
+  "estimate": "3–6 hr",
+  "prereqs": "M1 and M2 complete",
+  "briefing": {
+    "headline": "Without this, you lose work. With it, you can ship.",
+    "body": [
+      "Git tracks every change to every file in a project. GitHub stores those changes online so you can share, collaborate, or recover when your laptop dies. They're separate things that work together — Git is the tool, GitHub is the host.",
+      "This is the one module you can't fake. Ship a real project without Git and you'll lose work eventually. Lose work once and you'll never not use Git again. The good news: 90% of daily Git is six commands. Get those, and the rest is reference."
+    ]
+  },
+  "reference": [
+    {
+      "title": "The daily six",
+      "type": "code",
+      "content": "git status                     What's changed?\ngit add <file>                 Stage a file for commit\ngit add .                      Stage everything\ngit commit -m \"<message>\"      Save staged changes\ngit push                       Send commits to GitHub\ngit pull                       Get latest from GitHub"
+    },
+    {
+      "title": "The three states",
+      "type": "text",
+      "content": "Every file in a Git repo lives in one of three states.<br><strong>Working directory</strong> — files as they are on disk right now.<br><strong>Staging area</strong> — files you've added with <code>git add</code>, marked for the next commit.<br><strong>Committed</strong> — saved permanently in Git's history."
+    },
+    {
+      "title": "Branches",
+      "type": "code",
+      "content": "git branch                     List branches\ngit branch <name>              Create a branch\ngit switch <name>              Switch to a branch\ngit switch -c <name>           Create and switch in one\ngit merge <name>               Merge <name> into current\ngit branch -d <name>           Delete a merged branch"
+    },
+    {
+      "title": "When you mess up",
+      "type": "code",
+      "content": "git commit --amend           Edit the last commit\ngit restore <file>           Undo unstaged changes to a file\ngit restore --staged <file>  Unstage a file\ngit revert <hash>            Make a new commit that undoes an old one\ngit reset --hard HEAD        DANGER: throw away all uncommitted changes"
+    },
+    {
+      "title": "What goes in .gitignore",
+      "type": "text",
+      "content": "Anything you don't want tracked: <code>node_modules/</code>, <code>.env</code>, <code>.DS_Store</code>, build outputs (<code>dist/</code>, <code>build/</code>), editor settings (<code>.vscode/</code>), log files. The rule: if it's regenerated automatically or contains secrets, ignore it."
+    },
+    {
+      "title": "\"fatal: not a git repository\"",
+      "type": "text",
+      "content": "You're not inside a git-initialized folder. Run <code>pwd</code> to see where you are, then <code>cd</code> into the project root — or run <code>git init</code> if this is a new project."
+    },
+    {
+      "title": "\"Permission denied (publickey)\" on push",
+      "type": "text",
+      "content": "Your SSH key isn't set up correctly with GitHub. Run <code>ssh -T git@github.com</code> to test — if it doesn't say <code>Hi &lt;username&gt;!</code>, redo the SSH key step."
+    }
+  ],
+  "completion": {
+    "headline": "M3 complete.",
+    "body": "You can track changes, branch, push to GitHub, and recover from mistakes. Phase 1 is done. Next up: M4 — JavaScript for Directors.",
+    "nextModule": "m4"
+  },
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Configure your identity",
+      "estimate": "5 min",
+      "body": "Every commit Git makes is signed with a name and email. Set them once, globally — they apply to every repo on this machine. Use the same email you'll use for GitHub.",
+      "code": "git config --global user.name \"Your Name\"\ngit config --global user.email \"you@example.com\"\ngit config --global init.defaultBranch main\ngit config --global pull.rebase false",
+      "verify": "Run <code>git config --global --list</code>. You see <code>user.name</code>, <code>user.email</code>, and <code>init.defaultBranch=main</code>."
+    },
+    {
+      "id": "s2",
+      "title": "Make your first repo",
+      "estimate": "10 min",
+      "body": "<code>git init</code> turns any folder into a Git repository. It creates a hidden <code>.git/</code> directory that stores all the version history.",
+      "code": "cd ~\nmkdir mve-git-practice\ncd mve-git-practice\ngit init\nls -la",
+      "verify": "<code>ls -la</code> shows a <code>.git</code> directory. Run <code>git status</code> — it says <code>On branch main</code> and <code>No commits yet</code>."
+    },
+    {
+      "id": "s3",
+      "title": "The commit loop",
+      "estimate": "30 min",
+      "body": "The basic Git rhythm: change a file, <code>git status</code> to see what's changed, <code>git add</code> to stage, <code>git commit</code> to save. You'll do this hundreds of times.",
+      "code": "echo \"# MVE Git Practice\" > README.md\ngit status\ngit add README.md\ngit status\ngit commit -m \"Add README\"\ngit status",
+      "notes": [
+        "After <code>echo</code>: <code>git status</code> says <code>README.md</code> is untracked.",
+        "After <code>git add</code>: status shows it as <code>Changes to be committed</code>.",
+        "After <code>git commit</code>: status says <code>nothing to commit, working tree clean</code>."
+      ],
+      "verify": "Final <code>git status</code> shows: <code>nothing to commit, working tree clean</code>.",
+      "trouble": "If commit errors with <code>Please tell me who you are</code>: you skipped Step 1. Run those config commands, then retry the commit."
+    },
+    {
+      "id": "s4",
+      "title": "View history and diffs",
+      "estimate": "15 min",
+      "body": "<code>git log</code> shows the commit history — newest first. <code>--oneline</code> compresses it. <code>git diff</code> shows what's changed since the last commit, before you stage anything.",
+      "code": "echo \"\" >> README.md\necho \"Practice repo for Git basics.\" >> README.md\ngit diff\ngit add README.md\ngit commit -m \"Add description to README\"\ngit log --oneline",
+      "verify": "<code>git diff</code> showed the new lines you added (in green, with <code>+</code> in front). <code>git log --oneline</code> shows two commits."
+    },
+    {
+      "id": "s5",
+      "title": "Add a .gitignore",
+      "estimate": "20 min",
+      "body": "A <code>.gitignore</code> file tells Git which paths to never track. Anything regenerated automatically (<code>node_modules/</code>) or that contains secrets (<code>.env</code>) belongs here. Macs also litter every folder with <code>.DS_Store</code> files — those should be ignored too.",
+      "code": "echo \".DS_Store\" > .gitignore\necho \"node_modules/\" >> .gitignore\necho \".env\" >> .gitignore\ntouch .DS_Store\ngit status\ngit add .gitignore\ngit commit -m \"Add .gitignore\"",
+      "verify": "Before the commit, <code>git status</code> showed <code>.gitignore</code> as a new file but did not show <code>.DS_Store</code> — Git is correctly ignoring it. After the commit, <code>git log --oneline</code> shows three commits."
+    },
+    {
+      "id": "s6",
+      "title": "Branches",
+      "estimate": "30 min",
+      "body": "A branch is an independent line of work. You start on <code>main</code>. When you want to try something without risking the working version, you make a branch. <code>git switch -c &lt;name&gt;</code> creates and switches in one move.",
+      "code": "git switch -c experiment\necho \"Trying something new.\" >> README.md\ngit add README.md\ngit commit -m \"Try a new line\"\ngit log --oneline\ngit switch main\ncat README.md",
+      "verify": "After switching back to <code>main</code>, <code>cat README.md</code> doesn't show <code>Trying something new.</code> — that line only exists on the <code>experiment</code> branch."
+    },
+    {
+      "id": "s7",
+      "title": "Merge a branch",
+      "estimate": "20 min",
+      "body": "Merging takes commits from one branch and applies them to another. To bring <code>experiment</code>'s changes into <code>main</code>, switch to <code>main</code> first, then merge.",
+      "code": "git switch main\ngit merge experiment\ncat README.md\ngit log --oneline\ngit branch -d experiment",
+      "verify": "<code>README.md</code> now contains the new line. <code>git log --oneline</code> shows the experiment commit on <code>main</code>. <code>git branch</code> shows only <code>main</code>."
+    },
+    {
+      "id": "s8",
+      "title": "Create a GitHub account",
+      "estimate": "10 min",
+      "tag": "Optional",
+      "tagOptional": true,
+      "body": "Skip if you already have one. Otherwise: github.com → Sign up. Use the same email you used in <code>git config</code>.",
+      "notes": [
+        "Pick a username you can live with — it'll be in the URL of every public repo you ever make.",
+        "Verify your email when GitHub sends the link.",
+        "You don't need GitHub Pro. Free is fine for everything in this course."
+      ],
+      "verify": "You can sign in to github.com and see your dashboard."
+    },
+    {
+      "id": "s9",
+      "title": "Generate an SSH key",
+      "estimate": "10 min",
+      "body": "SSH keys let your Mac authenticate to GitHub without typing a password every time. Generate one tied to your GitHub email.",
+      "code": "ssh-keygen -t ed25519 -C \"you@example.com\"",
+      "notes": [
+        "Use your GitHub email instead of <code>you@example.com</code>.",
+        "When prompted for a file location, press Enter to accept the default.",
+        "When prompted for a passphrase, press Enter twice for none — or set one if you prefer."
+      ],
+      "verify": "<code>ls ~/.ssh</code> shows <code>id_ed25519</code> and <code>id_ed25519.pub</code>."
+    },
+    {
+      "id": "s10",
+      "title": "Add the SSH key to GitHub",
+      "estimate": "10 min",
+      "body": "Copy your public key and paste it into GitHub. The public one ends in <code>.pub</code> — never share the one without <code>.pub</code>.",
+      "code": "pbcopy < ~/.ssh/id_ed25519.pub",
+      "notes": [
+        "<code>pbcopy</code> copies the file's contents to your clipboard.",
+        "Go to github.com → click your avatar (top right) → <strong>Settings</strong>.",
+        "<strong>SSH and GPG keys</strong> in the left sidebar.",
+        "<strong>New SSH key</strong>. Title it something like \"MacBook\". Paste into the Key field. Save."
+      ],
+      "verify": "Run <code>ssh -T git@github.com</code> in iTerm2. It says <code>Hi &lt;your-username&gt;! You've successfully authenticated</code>.",
+      "trouble": "If it says <code>The authenticity of host 'github.com' can't be established</code> — type <code>yes</code> and press Enter. That's a one-time confirmation."
+    },
+    {
+      "id": "s11",
+      "title": "Push to GitHub",
+      "estimate": "20 min",
+      "body": "Create a repo on GitHub, link it to your local repo, push your commits up.",
+      "notes": [
+        "On github.com, click the <strong>+</strong> (top right) → <strong>New repository</strong>.",
+        "Name it <code>mve-git-practice</code>. Don't add a README, .gitignore, or license — your local repo already has them.",
+        "Click <strong>Create repository</strong>.",
+        "GitHub shows you a setup page. Copy the SSH URL (starts with <code>git@github.com:</code>).",
+        "Back in iTerm2, in your <code>mve-git-practice</code> folder, run the two commands below. Replace <code>YOUR_USERNAME</code> with yours."
+      ],
+      "code": "git remote add origin git@github.com:YOUR_USERNAME/mve-git-practice.git\ngit push -u origin main",
+      "verify": "Refresh the GitHub repo page. Your README, .gitignore, and three commits are visible."
+    },
+    {
+      "id": "s12",
+      "title": "Edit on GitHub, pull locally",
+      "estimate": "15 min",
+      "body": "Simulate the situation where the remote has changes you don't. Edit a file directly in GitHub's web UI, then pull those changes down.",
+      "notes": [
+        "On the GitHub repo page, click <code>README.md</code>.",
+        "Click the pencil icon (top right of the file view) to edit.",
+        "Add a new line. Click <strong>Commit changes</strong> at the top right, then <strong>Commit changes</strong> again in the dialog.",
+        "Back in iTerm2, run the commands below."
+      ],
+      "code": "git pull\ncat README.md\ngit log --oneline",
+      "verify": "<code>README.md</code> contains the line you added on GitHub. <code>git log</code> shows the new commit."
+    },
+    {
+      "id": "s13",
+      "title": "Undo: amend the last commit",
+      "estimate": "10 min",
+      "body": "Made a typo in the last commit message, or forgot to include a file? <code>--amend</code> rewrites the last commit instead of making a new one. Only use this on commits you haven't pushed yet — amending a pushed commit makes a mess for anyone who already pulled.",
+      "code": "echo \"One more line.\" >> README.md\ngit add README.md\ngit commit --amend --no-edit\ngit log --oneline",
+      "verify": "<code>git log --oneline</code> shows the same number of commits as before the amend. The most recent commit's hash has changed — that's the rewrite."
+    },
+    {
+      "id": "s14",
+      "title": "Clean up",
+      "estimate": "5 min",
+      "body": "Delete the practice folder locally. Optionally delete the GitHub repo too (Settings → scroll to bottom → <strong>Delete this repository</strong>).",
+      "code": "cd ~\nrm -rf mve-git-practice",
+      "verify": "Folder is gone."
+    }
+  ]
+}

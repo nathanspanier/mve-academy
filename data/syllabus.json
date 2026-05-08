@@ -66,8 +66,8 @@
       "desc": "Navigation, files, processes, paths, errors, environment.",
       "hours": 8,
       "phase": "p1",
-      "status": "coming-soon",
-      "unlocked": false
+      "status": "ready",
+      "unlocked": true
     },
     "m2": {
       "id": "m2",
@@ -75,8 +75,8 @@
       "desc": "Setup, extensions, integrated terminal, basic editing workflow.",
       "hours": 3,
       "phase": "p1",
-      "status": "coming-soon",
-      "unlocked": false
+      "status": "ready",
+      "unlocked": true
     },
     "m3": {
       "id": "m3",
@@ -84,8 +84,8 @@
       "desc": "Version control, commits, branches, push/pull, .gitignore. Why this is non-negotiable.",
       "hours": 8,
       "phase": "p1",
-      "status": "coming-soon",
-      "unlocked": false
+      "status": "ready",
+      "unlocked": true
     },
     "m4": {
       "id": "m4",
