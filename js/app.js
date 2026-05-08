@@ -24,7 +24,7 @@ function saveProgress(progress) {
 
 function getModuleProgress(moduleId) {
   const progress = loadProgress();
-  return progress[moduleId] || { done: {}, currentIdx: 0 };
+  return progress[moduleId] || { done: {}, open: {}, currentIdx: 0 };
 }
 
 function setModuleProgress(moduleId, moduleState) {

@@ -25,6 +25,7 @@ async function initLabBench() {
 
   // Load saved progress
   state = getModuleProgress(moduleId);
+  if (!state.open) state.open = {};
   computeCurrent();
 
   // Inject topbar content
@@ -204,6 +205,13 @@ function render() {
   const doneBtn = document.getElementById('done-btn');
   const stuckBtn = document.getElementById('stuck-btn');
 
+  // Update completion message (runs in both branches so the card is correct
+  // whether the user just finished the module or reloaded into it complete).
+  if (MODULE.completion) {
+    document.getElementById('complete-headline').textContent = MODULE.completion.headline;
+    document.getElementById('complete-body').textContent = MODULE.completion.body;
+  }
+
   if (state.currentIdx >= MODULE.steps.length) {
     ab.classList.add('is-complete');
     abNum.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -222,12 +230,6 @@ function render() {
     delete doneBtn.dataset.reset;
     stuckBtn.style.visibility = 'visible';
     document.getElementById('complete-card').classList.remove('show');
-
-    // Update completion message
-    if (MODULE.completion) {
-      document.getElementById('complete-headline').textContent = MODULE.completion.headline;
-      document.getElementById('complete-body').innerHTML = `Your environment is ready. Next up: <strong>${MODULE.completion.body.split('Next up: ')[1] || ''}</strong>`;
-    }
   }
 
   attachHandlers();
