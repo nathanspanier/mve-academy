@@ -62,23 +62,24 @@ function getModuleIdFromURL() {
   return params.get('id');
 }
 
-// ─── STUCK BUTTON — open Claude.ai in new tab ─────────────────
+// ─── QUESTION BUTTON — open Claude.ai with step context pre-filled ───
 
-function openStuckInClaude(moduleTitle, stepNum, totalSteps, stepTitle, stepCode) {
-  const codeLine = stepCode
-    ? `\n\nThe instructions told me to run:\n\`\`\`\n${stepCode}\n\`\`\``
-    : '';
+function openQuestionInClaude(moduleId, stepNum, stepTitle, stepBody, stepCode, stepVerify) {
+  // Step body and verify can contain inline HTML (<code>...</code>); strip
+  // those tags so the prompt reads cleanly in Claude.ai.
+  const stripTags = s => s ? String(s).replace(/<[^>]+>/g, '') : '';
 
-  const prompt = `I'm working through MVE Academy — ${moduleTitle}.
+  const lines = [];
+  lines.push(`I have a question about ${moduleId} Step ${stepNum} — ${stepTitle}.`);
+  lines.push('');
+  if (stepBody)   lines.push(`The step is asking me to: ${stripTags(stepBody)}`);
+  if (stepCode)   lines.push(`Command(s) to run:\n\`\`\`\n${stepCode}\n\`\`\``);
+  if (stepVerify) lines.push(`What "done" looks like: ${stripTags(stepVerify)}`);
+  lines.push('');
+  lines.push('My question:');
+  lines.push('');
 
-I'm stuck on Step ${stepNum} of ${totalSteps}: "${stepTitle}".${codeLine}
-
-When I tried it, I got: [paste your error here]
-
-What I've already checked: [what you tried]
-
-I'm on a Mac (macOS). What should I look at next?`;
-
+  const prompt = lines.join('\n');
   const url = `https://claude.ai/new?q=${encodeURIComponent(prompt)}`;
   window.open(url, '_blank', 'noopener');
 }

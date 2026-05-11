@@ -135,12 +135,30 @@ function render() {
       tag = `<span class="${tagCls}">${step.tag}</span>`;
     }
 
+    let tryCueBlock = '';
+    if (step.tryCue) {
+      tryCueBlock = `<div class="try-cue">
+        <span class="try-cue-badge">Try this</span>
+        <span class="try-cue-text">${step.tryCue}</span>
+      </div>`;
+    }
+
     let codeBlock = '';
     if (step.code) {
       codeBlock = `<div class="step-code-wrap">
         <pre class="step-code">${escapeHtml(step.code)}</pre>
         <button class="copy-btn" data-copy="${escapeAttr(step.code)}">Copy</button>
       </div>`;
+    }
+
+    let cmdNotesBlock = '';
+    if (step.commandNotes && step.commandNotes.length) {
+      cmdNotesBlock = `<div class="cmd-notes">${step.commandNotes.map(n => `
+        <div class="cmd-note">
+          <div class="cmd-note-key">${n.key}</div>
+          <p class="cmd-note-what">${n.what}</p>
+          <p class="cmd-note-when"><strong>When you'd check it:</strong> ${n.when}</p>
+        </div>`).join('')}</div>`;
     }
 
     let notesBlock = '';
@@ -151,6 +169,14 @@ function render() {
     let verifyBlock = '';
     if (step.verify) {
       verifyBlock = `<div class="step-verify"><strong>When this works:</strong> ${step.verify}</div>`;
+    }
+
+    let whenBlock = '';
+    if (step.whenYoullReachForThis && step.whenYoullReachForThis.length) {
+      whenBlock = `<div class="step-when">
+        <div class="step-when-label">When you'll reach for this</div>
+        <ul>${step.whenYoullReachForThis.map(s => `<li>${s}</li>`).join('')}</ul>
+      </div>`;
     }
 
     let troubleBlock = '';
@@ -177,9 +203,12 @@ function render() {
           <div class="step-body-wrap">
             <div class="step-body">
               <p>${step.body}</p>
+              ${tryCueBlock}
               ${codeBlock}
+              ${cmdNotesBlock}
               ${notesBlock}
               ${verifyBlock}
+              ${whenBlock}
               ${troubleBlock}
               ${footBlock}
             </div>
@@ -203,7 +232,7 @@ function render() {
   const abLabel = document.getElementById('ab-label');
   const abTitle = document.getElementById('ab-title');
   const doneBtn = document.getElementById('done-btn');
-  const stuckBtn = document.getElementById('stuck-btn');
+  const questionBtn = document.getElementById('question-btn');
 
   // Update completion message (runs in both branches so the card is correct
   // whether the user just finished the module or reloaded into it complete).
@@ -219,7 +248,7 @@ function render() {
     abTitle.textContent = 'All steps done';
     doneBtn.textContent = 'Reset';
     doneBtn.dataset.reset = 'true';
-    stuckBtn.style.visibility = 'hidden';
+    questionBtn.style.visibility = 'hidden';
     document.getElementById('complete-card').classList.add('show');
   } else {
     ab.classList.remove('is-complete');
@@ -228,7 +257,7 @@ function render() {
     abTitle.textContent = MODULE.steps[state.currentIdx].title;
     doneBtn.textContent = '✓ I did it';
     delete doneBtn.dataset.reset;
-    stuckBtn.style.visibility = 'visible';
+    questionBtn.style.visibility = 'visible';
     document.getElementById('complete-card').classList.remove('show');
   }
 
@@ -333,16 +362,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(scrollToCurrent, 100);
   });
 
-  // Stuck button — open Claude.ai directly
-  document.getElementById('stuck-btn').addEventListener('click', () => {
+  // Question button — open Claude.ai with current step context pre-filled
+  document.getElementById('question-btn').addEventListener('click', () => {
     if (state.currentIdx >= MODULE.steps.length) return;
     const step = MODULE.steps[state.currentIdx];
-    openStuckInClaude(
-      `${MODULE.id.toUpperCase()} — ${MODULE.title}`,
+    openQuestionInClaude(
+      MODULE.id.toUpperCase(),
       state.currentIdx + 1,
-      MODULE.steps.length,
       step.title,
-      step.code || null
+      step.body || null,
+      step.code || null,
+      step.verify || null
     );
   });
 

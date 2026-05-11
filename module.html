@@ -112,8 +112,62 @@ body { min-height: 100vh; padding-bottom: 96px; }
 .step-trouble strong { color: var(--amber-deep); font-weight: 600; }
 .step-trouble code { background: rgba(0,0,0,0.04); padding: 1px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 11.5px; }
 
+/* ─── Try-cue (amber action prompt above code) ─────────────── */
+.try-cue { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+.try-cue-badge {
+  background: var(--amber-soft);
+  color: var(--amber-deep);
+  border: 0.5px solid var(--amber);
+  font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 3px 10px; border-radius: 4px;
+}
+.try-cue-text { font-size: 13px; color: var(--text-2); }
+
+/* ─── Command notes (per-command/per-variable cards) ────────── */
+.cmd-notes { margin: 0 0 4px; }
+.cmd-note {
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 6px;
+  margin: 0 0 8px;
+}
+.cmd-note:last-child { margin-bottom: 0; }
+.cmd-note-key {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--amber-deep);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.cmd-note-what { font-size: 13px; color: var(--text-1); line-height: 1.55; margin: 0 0 4px; }
+.cmd-note-when { font-size: 12.5px; color: var(--text-3); line-height: 1.55; margin: 0; }
+.cmd-note-when strong {
+  font-weight: 500;
+  color: var(--text-2);
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  margin-right: 6px;
+}
+.cmd-note code { background: rgba(0,0,0,0.04); padding: 1px 5px; border-radius: 3px; font-family: var(--font-mono); font-size: 12px; }
+
+/* ─── Scenarios panel (when you'll reach for this) ─────────── */
+.step-when {
+  margin-top: 12px; padding: 16px 18px;
+  background: var(--surface-2); border-radius: 8px;
+  font-size: 13px; color: var(--text-2); line-height: 1.6;
+}
+.step-when-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 10px; }
+.step-when ul { margin: 0; padding: 0; list-style: none; }
+.step-when li { font-size: 13px; color: var(--text-2); padding: 5px 0 5px 18px; position: relative; line-height: 1.6; }
+.step-when li::before { content: '·'; position: absolute; left: 6px; top: 3px; font-weight: bold; color: var(--text-4); }
+.step-when code { background: rgba(0,0,0,0.04); padding: 1px 5px; border-radius: 3px; font-family: var(--font-mono); font-size: 12px; }
+
 @media (prefers-color-scheme: dark) {
-  .step-verify code, .step-trouble code { background: rgba(255,255,255,0.06); }
+  .step-verify code, .step-trouble code, .cmd-note code, .step-when code { background: rgba(255,255,255,0.06); }
 }
 
 /* Step states */
@@ -238,7 +292,7 @@ body { min-height: 100vh; padding-bottom: 96px; }
     </div>
   </div>
   <div class="ab-buttons">
-    <button class="btn btn-ghost" id="stuck-btn">Stuck?</button>
+    <button class="btn btn-ghost" id="question-btn">Question?</button>
     <button class="btn btn-primary" id="done-btn">✓ I did it</button>
   </div>
 </footer>

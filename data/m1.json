@@ -147,9 +147,34 @@
       "id": "s11",
       "title": "Environment variables",
       "estimate": "15 min",
-      "body": "Variables your shell knows about. <code>$PATH</code> is the most important — it's the list of directories where your shell looks for commands. When something says \"command not found\", that means: \"I looked everywhere on PATH and didn't find it.\"",
+      "body": "Variables your shell knows about. <code>$PATH</code> is the most important — it's the list of directories where your shell looks for commands. When you type <code>git</code> or <code>node</code>, the terminal doesn't magically know where those programs live; it searches PATH. \"Command not found\" means: \"I looked everywhere on PATH and didn't find it.\" This is also how Homebrew, nvm, and every installer make their tools available without you thinking about it.",
+      "tryCue": "Run all three. Read the output.",
       "code": "echo $PATH\necho $HOME\necho $SHELL",
-      "verify": "Each prints a value. <code>$HOME</code> matches your home directory. <code>$SHELL</code> is <code>/bin/zsh</code>."
+      "commandNotes": [
+        {
+          "key": "$PATH",
+          "what": "Colon-separated list of directories the shell searches when you type a command.",
+          "when": "\"command not found\" for something you know is installed — PATH is the first thing to look at."
+        },
+        {
+          "key": "$HOME",
+          "what": "Your home directory — usually <code>/Users/yourname</code>.",
+          "when": "A tutorial says \"put this in <code>$HOME/.config/...</code>\" and you want to know where that actually is. Or a script is misbehaving and you want to confirm which user it's running as."
+        },
+        {
+          "key": "$SHELL",
+          "what": "Which shell program is running. macOS default is zsh.",
+          "when": "Your <code>.zshrc</code> isn't loading and you suspect you're actually on bash. Or a tool says \"add this to your shell config\" and you need to know which file to edit."
+        }
+      ],
+      "verify": "All three print a value. <code>$HOME</code> matches your home directory. <code>$SHELL</code> is <code>/bin/zsh</code>.",
+      "whenYoullReachForThis": [
+        "A command works in one terminal window but not another — different shells loaded different PATH values",
+        "<code>brew install</code> succeeds but the new command isn't found — the install didn't update PATH",
+        "A script runs locally but fails in CI — CI's PATH is minimal and missing something",
+        "Switching Node versions with nvm — nvm rewrites PATH every time",
+        "Claude Code says it can't find a tool you just installed — close and reopen the terminal so PATH reloads"
+      ]
     },
     {
       "id": "s12",
