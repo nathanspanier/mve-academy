@@ -64,6 +64,7 @@
       "title": "Confirm iTerm2 works",
       "estimate": "< 1 min",
       "body": "Type a command. If it prints back, you're in business.",
+      "tryCue": "Type this and press Enter.",
       "code": "echo \"iTerm2 is working\"",
       "verify": "Output: <code>iTerm2 is working</code>"
     },
@@ -71,14 +72,22 @@
       "id": "s3",
       "title": "Install Homebrew",
       "estimate": "15–30 min",
-      "body": "The Mac package manager. Paste the command below — the whole thing as one line — into iTerm2 and press Enter.",
+      "body": "The Mac package manager — the front door for installing nearly every developer tool you'll touch (Node, Git, Python, the AWS CLI, ffmpeg, dozens more). One command installs the thing. No App Store, no DMG drag-and-drop, no PATH spelunking. You'll run <code>brew install &lt;name&gt;</code> hundreds of times before this course is over.",
+      "tryCue": "Paste the whole thing as one line. Press Enter, then wait.",
       "code": "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"",
       "notes": [
         "macOS will ask for your password. Type it. Nothing appears as you type — that is normal. Press Enter.",
         "If asked to install Xcode Command Line Tools: press Enter to confirm. Several minutes of waiting.",
         "Wait for \"==> Installation successful!\" — the installer prints a lot of output. That is fine."
       ],
-      "verify": "You see <strong>Installation successful!</strong> in the output."
+      "verify": "You see <strong>Installation successful!</strong> in the output.",
+      "whenYoullReachForThis": [
+        "A tutorial says \"first, install ffmpeg\" — that's <code>brew install ffmpeg</code>, not a hunt for an installer",
+        "Claude Code tells you to install a CLI tool you don't have — Homebrew is almost always how",
+        "You set up a new Mac and want every dev tool back fast — install Homebrew first, then <code>brew install</code> the rest",
+        "Something you installed months ago is broken or outdated — <code>brew upgrade &lt;name&gt;</code> or <code>brew reinstall &lt;name&gt;</code>",
+        "You want to remove a tool cleanly without dotfiles scattered everywhere — <code>brew uninstall &lt;name&gt;</code>"
+      ]
     },
     {
       "id": "s4",
@@ -86,9 +95,28 @@
       "estimate": "1 min",
       "tag": "Apple Silicon only",
       "tagOptional": false,
-      "body": "On Apple Silicon (M1/M2/M3/M4), Homebrew installs to <code>/opt/homebrew/bin</code> — which isn't on your PATH yet. The installer printed two commands to run. Run them now, copying exactly from your terminal output.<br><br>Intel Macs: skip this step. The installer handles it.",
+      "body": "On Apple Silicon (M1/M2/M3/M4), Homebrew installs to <code>/opt/homebrew/bin</code> — which isn't on your PATH yet. PATH is the list of directories your shell searches when you type a command; if a directory isn't on PATH, anything inside it might as well not exist. The two lines below tell zsh where Homebrew lives, then apply that change to the current session.<br><br>Intel Macs: skip this step. The installer handles it.",
+      "tryCue": "Run both lines. Copy them exactly from your Homebrew output.",
       "code": "echo 'eval \"$(/opt/homebrew/bin/brew shellenv)\"' >> ~/.zprofile\neval \"$(/opt/homebrew/bin/brew shellenv)\"",
-      "verify": "Both commands run with no output and no errors."
+      "commandNotes": [
+        {
+          "key": "echo ... >> ~/.zprofile",
+          "what": "Appends a line to <code>~/.zprofile</code> — a config file zsh runs every time it starts a new login shell.",
+          "when": "Any tool's install instructions tell you to \"add this line to your shell config so it loads every time.\" nvm, pyenv, conda, and Homebrew itself all use this pattern."
+        },
+        {
+          "key": "eval \"$(brew shellenv)\"",
+          "what": "Runs the same PATH-setup the next zsh login would run — but in your current session, so you don't have to restart yet.",
+          "when": "You just edited a shell config and want it to take effect now instead of opening a new terminal. The <code>source ~/.zshrc</code> idiom is the same trick for a different file."
+        }
+      ],
+      "verify": "Both commands run with no output and no errors.",
+      "whenYoullReachForThis": [
+        "<code>brew install</code> succeeds but typing the new command gives \"command not found\" — PATH didn't pick it up",
+        "You install nvm or pyenv and the README tells you to add a line to <code>~/.zprofile</code> or <code>~/.zshrc</code>",
+        "Moving to a new Mac and your old terminal customizations are gone — they live in shell config files you can copy over",
+        "Claude Code says \"add this to your shell\" — it means a line like the ones above, in <code>~/.zprofile</code> or <code>~/.zshrc</code>"
+      ]
     },
     {
       "id": "s5",
@@ -102,6 +130,7 @@
       "title": "Verify Homebrew",
       "estimate": "< 1 min",
       "body": "Confirm <code>brew</code> is installed and on your PATH.",
+      "tryCue": "Run it.",
       "code": "brew --version",
       "verify": "Output: <code>Homebrew 4.x.x</code> (version number will vary)",
       "trouble": "If \"<code>command not found: brew</code>\" — you skipped Step 4 or didn't restart iTerm2 in Step 5. Go back."
@@ -110,7 +139,8 @@
       "id": "s7",
       "title": "Install Git",
       "estimate": "2 min",
-      "body": "Your Mac has a Git built in. It is old. Replace it with the Homebrew version.",
+      "body": "Your Mac has a Git built in. It is old. Replace it with the Homebrew version — same command pattern you'll use for every other tool.",
+      "tryCue": "Run it. Wait for the install to finish.",
       "code": "brew install git",
       "verify": "Wait for the install to finish. No errors at the end."
     },
@@ -119,6 +149,7 @@
       "title": "Verify Git",
       "estimate": "< 1 min",
       "body": "Confirm the new Git is what runs when you type \"git\".",
+      "tryCue": "Run it.",
       "code": "git --version",
       "verify": "Output: <code>git version 2.x.x</code>"
     },
@@ -126,7 +157,8 @@
       "id": "s9",
       "title": "Verify your shell is zsh",
       "estimate": "< 1 min",
-      "body": "Modern macOS defaults to zsh, but worth confirming before moving on.",
+      "body": "Modern macOS defaults to zsh, but worth confirming before moving on. M1 covers shells in depth — for now, you just need to know which one you're in.",
+      "tryCue": "Run it.",
       "code": "echo $SHELL",
       "verify": "Output: <code>/bin/zsh</code>",
       "trouble": "If it returns <code>bash</code>: run <code>chsh -s /bin/zsh</code> and reopen iTerm2."
@@ -138,6 +170,7 @@
       "tag": "Optional",
       "tagOptional": true,
       "body": "A framework that makes your prompt more informative and adds shortcuts. Many devs use it. Skip if you want simplicity — you can come back any time.",
+      "tryCue": "Paste it. Wait for the prompt to change.",
       "code": "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"",
       "verify": "Your prompt looks different after restart. That's the point."
     }

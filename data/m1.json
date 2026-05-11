@@ -59,81 +59,295 @@
       "id": "s1",
       "title": "Where you are, what's here",
       "estimate": "10 min",
-      "body": "Two questions every terminal session starts with: where am I, and what's in this directory? Two commands answer both. <code>ls -la</code> adds detail — file sizes, dates, and entries that begin with a dot (hidden files).",
+      "body": "Two questions every terminal session starts with: where am I, and what's in this directory? Two commands answer both. <code>ls -la</code> adds detail — file sizes, dates, and entries that begin with a dot (hidden files like <code>.env</code>, <code>.gitignore</code>, <code>.github/</code>).",
+      "tryCue": "Run all three. Read each output before running the next.",
       "code": "pwd\nls\nls -la",
-      "verify": "<code>pwd</code> prints a path. <code>ls</code> prints a list. <code>ls -la</code> prints a longer list including <code>.</code> and <code>..</code>."
+      "commandNotes": [
+        {
+          "key": "pwd",
+          "what": "Print working directory — the absolute path of where the shell currently is.",
+          "when": "A script failed with a relative-path error and you want to confirm what the shell thinks \"here\" actually is. Or you just opened a new terminal tab and aren't sure if you're still in the same project."
+        },
+        {
+          "key": "ls",
+          "what": "List visible files and folders in the current directory.",
+          "when": "You just <code>cd</code>'d into a new repo and want to see what's at the root. Or a tutorial says \"open the <code>src</code> folder\" and you need to confirm the folder is named <code>src</code> and not <code>source</code>."
+        },
+        {
+          "key": "ls -la",
+          "what": "Same as <code>ls</code>, but shows hidden dotfiles and a long-format listing with sizes, dates, and permissions.",
+          "when": "Looking for the <code>.env</code> file a README mentions but can't find. Or checking whether a repo has <code>.github/</code> workflows. Or debugging a permissions error — the permission bits show up in the long format."
+        }
+      ],
+      "verify": "<code>pwd</code> prints a path. <code>ls</code> prints a list. <code>ls -la</code> prints a longer list including <code>.</code> and <code>..</code>.",
+      "whenYoullReachForThis": [
+        "Cloning a new repo and trying to orient — <code>pwd</code> then <code>ls</code> tells you where you landed and what's inside",
+        "A README references <code>.env.example</code> but you don't see it — <code>ls -la</code> reveals it was hidden",
+        "Claude Code says it edited a file but you don't see the change — <code>ls -la</code> confirms the file exists and shows the modified date",
+        "A build fails because a config file is in the wrong place — <code>pwd</code> + <code>ls</code> confirms where you actually are"
+      ]
     },
     {
       "id": "s2",
       "title": "Move around",
       "estimate": "15 min",
       "body": "<code>cd</code> changes directory. <code>~</code> is home. <code>..</code> is one level up. <code>-</code> is wherever you were last. You go nowhere without these four.",
+      "tryCue": "Run each line. Watch how <code>pwd</code> changes after each <code>cd</code>.",
       "code": "cd ~\npwd\ncd Desktop\npwd\ncd ..\npwd\ncd -\npwd",
-      "verify": "Each <code>pwd</code> prints a different path that matches what you'd expect from the <code>cd</code> before it."
+      "commandNotes": [
+        {
+          "key": "cd ~",
+          "what": "Go to your home directory — <code>/Users/yourname</code>.",
+          "when": "You're lost in some nested folder and need a known starting point. Also the answer when you want to <code>cd</code> into a folder in your home dir without typing the full path."
+        },
+        {
+          "key": "cd Desktop",
+          "what": "Step into a folder by name (relative path from where you are).",
+          "when": "You just cloned a repo with <code>git clone</code> and need to step inside it before you can run anything. This is the move you'll do hundreds of times."
+        },
+        {
+          "key": "cd ..",
+          "what": "Go up one level to the parent directory.",
+          "when": "You're inside <code>src/components/</code> and need to run <code>npm install</code> from the project root. Or you cloned a repo into the wrong place and want to back out."
+        },
+        {
+          "key": "cd -",
+          "what": "Jump back to the directory you were in before the last <code>cd</code>.",
+          "when": "Bouncing between two folders repeatedly — say, project root and a sibling docs repo. Saves you from re-typing long paths."
+        }
+      ],
+      "verify": "Each <code>pwd</code> prints a different path that matches what you'd expect from the <code>cd</code> before it.",
+      "whenYoullReachForThis": [
+        "Cloning a repo and stepping into it to run the install command",
+        "Jumping from your project root into <code>node_modules</code> or <code>src</code> and back",
+        "A README says \"from the project root, run X\" — you <code>cd ..</code> until <code>pwd</code> matches the repo name",
+        "Claude Code wrote a file in a subfolder and you want to inspect it",
+        "Switching between two repos that talk to each other (front end and back end) — <code>cd -</code> is the toggle"
+      ]
     },
     {
       "id": "s3",
       "title": "Make a workspace",
       "estimate": "10 min",
-      "body": "Create a folder in your home directory to play in for the rest of this module. <code>mkdir</code> makes directories.",
+      "body": "Create a folder in your home directory to play in for the rest of this module. <code>mkdir</code> makes directories — the same command you'll use every time you start a new project, scratch a quick experiment, or organize files.",
+      "tryCue": "Run all four. End up inside the new folder.",
       "code": "cd ~\nmkdir mve-practice\ncd mve-practice\npwd",
-      "verify": "<code>pwd</code> ends in <code>/mve-practice</code>."
+      "commandNotes": [
+        {
+          "key": "mkdir mve-practice",
+          "what": "Make a new directory with the given name in the current location.",
+          "when": "Starting a new project before <code>git init</code>. Or carving out a scratch folder for a quick experiment so you don't pollute your home directory."
+        },
+        {
+          "key": "mkdir -p a/b/c",
+          "what": "Make a nested path, creating any intermediate directories that don't exist yet. (Not in this code block — see the reference cheat sheet.)",
+          "when": "Setting up a project structure in one command: <code>mkdir -p src/components/ui</code>. Or following install instructions that say \"create <code>~/.config/something/</code>\" — the parent <code>.config</code> may not exist."
+        }
+      ],
+      "verify": "<code>pwd</code> ends in <code>/mve-practice</code>.",
+      "whenYoullReachForThis": [
+        "Starting a new repo before <code>git init</code>",
+        "Scaffolding folder structure inside a project — <code>mkdir -p src/components</code>",
+        "Making a scratch folder to test something quickly without cluttering your real projects",
+        "Following a tool's install docs that say \"create the config directory at <code>~/.config/...</code>\""
+      ]
     },
     {
       "id": "s4",
       "title": "Create files",
       "estimate": "10 min",
-      "body": "<code>touch</code> creates an empty file. Multiple files in one command — separate with spaces.",
+      "body": "<code>touch</code> creates an empty file. Multiple files in one command — separate with spaces. It also updates the modified timestamp of a file that already exists, but you'll use it almost entirely to make new empty files.",
+      "tryCue": "Run all three. Confirm the files appear in <code>ls</code>.",
       "code": "touch hello.txt\ntouch a.txt b.txt c.txt\nls",
-      "verify": "<code>ls</code> shows <code>hello.txt</code>, <code>a.txt</code>, <code>b.txt</code>, <code>c.txt</code>."
+      "commandNotes": [
+        {
+          "key": "touch <file>",
+          "what": "Create the file if it doesn't exist; update its modified time if it does.",
+          "when": "You need a placeholder file before opening it in an editor — <code>touch index.html</code>, then <code>code index.html</code>. Or you want a <code>.gitkeep</code> in an otherwise-empty folder so Git tracks it."
+        },
+        {
+          "key": "touch a.txt b.txt c.txt",
+          "what": "Multiple files in one command, separated by spaces.",
+          "when": "Scaffolding several files at once — say, <code>touch README.md LICENSE .gitignore</code> when starting a new repo."
+        }
+      ],
+      "verify": "<code>ls</code> shows <code>hello.txt</code>, <code>a.txt</code>, <code>b.txt</code>, <code>c.txt</code>.",
+      "whenYoullReachForThis": [
+        "Starting a project and creating the standard files in one shot: <code>touch README.md .gitignore LICENSE</code>",
+        "Need an empty file to paste content into from an editor — <code>touch</code> then <code>code</code>",
+        "Adding a <code>.gitkeep</code> so Git will track an otherwise-empty folder",
+        "A tutorial says \"create <code>config.json</code>\" — <code>touch config.json</code> is the fastest way"
+      ]
     },
     {
       "id": "s5",
       "title": "Put content in, read it back",
       "estimate": "20 min",
-      "body": "<code>echo</code> prints a string. <code>></code> redirects that output into a file instead of the screen. <code>>></code> appends. <code>cat</code> dumps the whole file. <code>head</code> and <code>tail</code> show just the top or bottom.",
+      "body": "Six small tools that combine constantly. <code>echo</code> prints a string. <code>></code> redirects that output into a file instead of the screen — overwriting whatever was there. <code>>></code> appends instead of overwriting. <code>cat</code> dumps a whole file. <code>head</code> and <code>tail</code> show just the top or bottom. This pattern — \"run something, send its output somewhere\" — is how most real terminal work gets done.",
+      "tryCue": "Run all six lines in order. Read each output before moving on.",
       "code": "echo \"line one\" > poem.txt\necho \"line two\" >> poem.txt\necho \"line three\" >> poem.txt\ncat poem.txt\nhead -1 poem.txt\ntail -1 poem.txt",
+      "commandNotes": [
+        {
+          "key": "echo \"...\"",
+          "what": "Print the given string to standard output.",
+          "when": "Confirming a variable's value (<code>echo $PATH</code>). Or generating a quick line of text to pipe or redirect into a file."
+        },
+        {
+          "key": "> file",
+          "what": "Send the output to <code>file</code>, replacing whatever was in it.",
+          "when": "Generating a fresh file from a command's output — <code>git log --oneline &gt; commits.txt</code>. Dangerous when you mean to append: <code>&gt;</code> silently wipes the file."
+        },
+        {
+          "key": ">> file",
+          "what": "Append the output to <code>file</code> instead of overwriting.",
+          "when": "Adding a line to <code>~/.zshrc</code> or <code>~/.zprofile</code> without nuking what's already there — like the Homebrew PATH line you appended in M0."
+        },
+        {
+          "key": "cat <file>",
+          "what": "Concatenate and print a file's contents to the screen.",
+          "when": "Quickly checking what's in a config or log file without opening an editor. Or piping a file's contents into another command: <code>cat data.json | jq .</code>."
+        },
+        {
+          "key": "head -1 <file>",
+          "what": "Print the first N lines (default 10). <code>-1</code> means just the first line.",
+          "when": "Peeking at the top of a big CSV to see the column headers. Or grabbing the first line of a log to check what process started."
+        },
+        {
+          "key": "tail -1 <file>",
+          "what": "Print the last N lines (default 10).",
+          "when": "Reading the most recent entries of a log file — the failure is almost always at the bottom. <code>tail -f</code> streams new lines live as they're written."
+        }
+      ],
       "verify": "<code>cat</code> prints all three lines. <code>head -1</code> prints only <code>line one</code>. <code>tail -1</code> prints only <code>line three</code>.",
-      "trouble": "If <code>cat</code> shows only <code>line three</code>: you used <code>></code> instead of <code>>></code> on the second and third lines and overwrote the file each time."
+      "whenYoullReachForThis": [
+        "Appending a tool's setup line to <code>~/.zshrc</code> or <code>~/.zprofile</code> without overwriting it",
+        "Checking the first or last few lines of a big log file — <code>head logs/server.log</code> or <code>tail logs/server.log</code>",
+        "Dumping a config file to confirm what's actually in it before editing — <code>cat .env</code>",
+        "Capturing a command's output to a file for later — <code>npm test &gt; test-results.txt</code>",
+        "Piping a file's contents into another tool — <code>cat data.json | jq .</code> to pretty-print JSON"
+      ]
     },
     {
       "id": "s6",
       "title": "Copy and rename",
       "estimate": "15 min",
-      "body": "<code>cp</code> copies. <code>mv</code> moves — and a move within the same directory is a rename.",
+      "body": "<code>cp</code> copies. <code>mv</code> moves — and a move within the same directory is a rename. There is no separate \"rename\" command in Unix; that's the same operation as moving the file to a new name in place.",
+      "tryCue": "Run all three. Watch how the file list changes.",
       "code": "cp poem.txt poem-backup.txt\nmv poem-backup.txt poem-v2.txt\nls",
-      "verify": "<code>ls</code> shows <code>poem.txt</code> and <code>poem-v2.txt</code>. No <code>poem-backup.txt</code>."
+      "commandNotes": [
+        {
+          "key": "cp <src> <dst>",
+          "what": "Copy a file from source to destination. <code>cp -r</code> for whole directories.",
+          "when": "Backing up a config file before you mess with it — <code>cp .env .env.bak</code>. Or copying a working component file as the starting point for a new one."
+        },
+        {
+          "key": "mv <src> <dst>",
+          "what": "Move a file. If <code>&lt;dst&gt;</code> is a different name in the same directory, it's a rename.",
+          "when": "Renaming a file (<code>mv Component.jsx Button.jsx</code>). Or moving a file into a subfolder (<code>mv stray-file.md docs/</code>) after realizing it's in the wrong place."
+        }
+      ],
+      "verify": "<code>ls</code> shows <code>poem.txt</code> and <code>poem-v2.txt</code>. No <code>poem-backup.txt</code>.",
+      "whenYoullReachForThis": [
+        "Backing up a config or env file before editing it — <code>cp .env .env.bak</code>",
+        "Renaming a file when refactoring — <code>mv old-name.js new-name.js</code> (better than the Finder rename if you also want Git to see it as a rename)",
+        "Moving a misplaced file into the right folder — <code>mv notes.md docs/</code>",
+        "Copying a working file as the starting point for a new one — <code>cp Button.jsx Toggle.jsx</code>, then edit"
+      ]
     },
     {
       "id": "s7",
       "title": "Delete",
       "estimate": "15 min",
-      "body": "<code>rm</code> deletes a file. <code>rm -r</code> deletes a directory and everything in it. There is no Trash. There is no undo. Read the command before pressing Enter.",
+      "body": "<code>rm</code> deletes a file. <code>rm -r</code> deletes a directory and everything in it. There is no Trash. There is no undo. Read the command before pressing Enter — especially if it has wildcards or absolute paths in it.",
+      "tryCue": "Run both lines. Confirm the three files are gone.",
       "code": "rm a.txt b.txt c.txt\nls",
+      "commandNotes": [
+        {
+          "key": "rm <file>",
+          "what": "Delete the named file permanently. No Trash, no recovery.",
+          "when": "Cleaning up scratch files after an experiment. Or removing a file Git is complaining about that you genuinely don't need."
+        },
+        {
+          "key": "rm -r <dir>",
+          "what": "Recursively delete a directory and everything inside it. The dangerous one.",
+          "when": "Nuking a botched <code>node_modules</code> before running <code>npm install</code> fresh. Or deleting a build output folder (<code>dist/</code>, <code>.next/</code>) when a build is acting weird. Read carefully — typos here cost you real work."
+        }
+      ],
       "verify": "<code>a.txt</code>, <code>b.txt</code>, and <code>c.txt</code> are gone. <code>poem.txt</code> and <code>poem-v2.txt</code> remain.",
-      "trouble": "If you ever type something like <code>rm -rf /</code> or <code>rm -rf ~</code> — stop. Don't press Enter. Backspace it out. These commands wipe your computer."
+      "trouble": "If you ever type something like <code>rm -rf /</code> or <code>rm -rf ~</code> — stop. Don't press Enter. Backspace it out. These commands wipe your computer.",
+      "whenYoullReachForThis": [
+        "<code>node_modules</code> is acting strange — <code>rm -r node_modules</code> then <code>npm install</code> fresh",
+        "A build folder (<code>dist/</code>, <code>.next/</code>, <code>build/</code>) is producing stale output — delete it and rebuild",
+        "Cleaning up scratch files after an experiment so they don't end up in a commit",
+        "Removing a file Git is tracking that you genuinely don't need (then <code>git add -u</code> to stage the deletion)"
+      ]
     },
     {
       "id": "s8",
       "title": "Wildcards",
       "estimate": "15 min",
-      "body": "<code>*</code> matches any sequence of characters. <code>?</code> matches one character. Lets you operate on groups of files at once.",
+      "body": "<code>*</code> matches any sequence of characters. <code>?</code> matches exactly one. They expand <em>before</em> the command runs — so <code>ls *.txt</code> becomes <code>ls one.txt two.txt</code> as far as <code>ls</code> is concerned. Lets you operate on groups of files at once without typing each name.",
+      "tryCue": "Run all four. Compare what each <code>ls</code> returns.",
       "code": "touch one.txt two.txt three.md four.md\nls *.txt\nls *.md\nls ?ne.txt",
-      "verify": "First <code>ls</code> shows only <code>.txt</code> files, second shows only <code>.md</code> files, third shows only <code>one.txt</code>."
+      "commandNotes": [
+        {
+          "key": "*",
+          "what": "Matches zero or more characters. <code>*.txt</code> matches anything ending in <code>.txt</code>.",
+          "when": "Listing or deleting every file with a given extension — <code>rm *.log</code> to clear out logs. Or moving every Markdown file: <code>mv *.md docs/</code>."
+        },
+        {
+          "key": "?",
+          "what": "Matches exactly one character. <code>?ne.txt</code> matches <code>one.txt</code> but not <code>none.txt</code>.",
+          "when": "Rarer than <code>*</code> — useful when filenames differ by a single character, like <code>image-1.png</code> through <code>image-9.png</code>."
+        }
+      ],
+      "verify": "First <code>ls</code> shows only <code>.txt</code> files, second shows only <code>.md</code> files, third shows only <code>one.txt</code>.",
+      "whenYoullReachForThis": [
+        "Deleting every <code>.log</code> file at once — <code>rm *.log</code>",
+        "Moving all the Markdown files in a folder into <code>docs/</code> — <code>mv *.md docs/</code>",
+        "Counting how many TypeScript files are in a directory — <code>ls *.ts | wc -l</code>",
+        "Checking that a build emitted what you expected — <code>ls dist/*.js</code>"
+      ]
     },
     {
       "id": "s9",
       "title": "Pipes",
       "estimate": "20 min",
-      "body": "<code>|</code> takes the output of the command on its left and feeds it as input to the command on its right. This is how you chain commands. Most real terminal use is small commands piped together.",
+      "body": "<code>|</code> takes the output of the command on its left and feeds it as input to the command on its right. This is the move that turns a handful of small commands into a real tool. Most real terminal work is short commands piped together — list something, filter it, count it, sort it.",
+      "tryCue": "Run both. Each pipe combines two commands into one operation.",
       "code": "ls -la | head -5\nls | wc -l",
-      "verify": "First command prints the first 5 lines of <code>ls -la</code>. Second command prints a single number — the count of files in this directory."
+      "commandNotes": [
+        {
+          "key": "|",
+          "what": "Send the left command's standard output as standard input to the right command.",
+          "when": "Any time a command spews more output than you want to read. Pipe it through <code>head</code>, <code>tail</code>, <code>grep</code>, or <code>wc</code> to narrow down."
+        },
+        {
+          "key": "head -5",
+          "what": "Show only the first 5 lines of whatever comes in.",
+          "when": "Sampling a long output to confirm the shape before you process it — <code>cat data.csv | head -5</code> to see the headers and first few rows."
+        },
+        {
+          "key": "wc -l",
+          "what": "Count lines (word count, lines flag).",
+          "when": "Counting commits in a log, files in a directory, or matches from <code>grep</code>. Any time you want a number instead of a list."
+        }
+      ],
+      "verify": "First command prints the first 5 lines of <code>ls -la</code>. Second command prints a single number — the count of files in this directory.",
+      "whenYoullReachForThis": [
+        "A log file is huge and you only care about the tail — <code>cat server.log | tail -20</code>",
+        "Counting how many TODO comments are in your codebase — <code>grep -r TODO src | wc -l</code>",
+        "Finding which files mention a string — <code>grep -r \"useState\" src | head</code>",
+        "Pretty-printing JSON from an API call — <code>curl ... | jq .</code>",
+        "Filtering <code>git log</code> output — <code>git log --oneline | grep fix</code>"
+      ]
     },
     {
       "id": "s10",
       "title": "Processes and stopping things",
       "estimate": "20 min",
-      "body": "A process is a running program. <code>top</code> shows them live, sorted by CPU. The skill you actually need: stopping a command that's stuck or running too long. <strong>Ctrl + C</strong> cancels. Use it constantly.",
+      "body": "A process is a running program. <code>top</code> shows them live, sorted by CPU. Useful occasionally — but the skill you actually need every day is stopping a command that's stuck, hung, or running too long. <strong>Ctrl + C</strong> is the cancel button. You will use it constantly.",
+      "tryCue": "Open <code>top</code>, then quit it. Then start <code>ping</code> and stop it.",
       "code": "top",
       "notes": [
         "Watch the list update for a few seconds.",
@@ -141,7 +355,26 @@
         "Run <code>ping google.com</code> — it'll keep pinging forever.",
         "Press <strong>Ctrl + C</strong> to stop it."
       ],
-      "verify": "You exited top with <code>q</code> and stopped <code>ping</code> with Ctrl + C."
+      "commandNotes": [
+        {
+          "key": "top",
+          "what": "Show a live, auto-refreshing list of running processes sorted by CPU. Press <code>q</code> to quit.",
+          "when": "Your laptop fan spins up and you want to know what's eating CPU. Or a Node process seems hung and you want to confirm it's still alive."
+        },
+        {
+          "key": "Ctrl + C",
+          "what": "Send an interrupt signal to the foreground process. Most programs stop cleanly when they receive it.",
+          "when": "<code>npm run dev</code> needs to stop. A test runner is hanging. A <code>curl</code> request is taking forever. Anything that locked up the terminal — Ctrl + C first, ask questions later."
+        }
+      ],
+      "verify": "You exited top with <code>q</code> and stopped <code>ping</code> with Ctrl + C.",
+      "whenYoullReachForThis": [
+        "<code>npm run dev</code> is running and you need to stop it before you can run another command — Ctrl + C",
+        "A test or build is hung and the terminal won't take input — Ctrl + C",
+        "Your fan is loud and you want to know which process is doing it — <code>top</code>",
+        "Claude Code is running a long task and you want to abort — Ctrl + C in its terminal pane",
+        "A <code>curl</code> or <code>ping</code> is producing endless output — Ctrl + C"
+      ]
     },
     {
       "id": "s11",
@@ -180,20 +413,40 @@
       "id": "s12",
       "title": "Get help",
       "estimate": "10 min",
-      "body": "<code>man &lt;command&gt;</code> opens the manual page (press <code>q</code> to quit). <code>&lt;command&gt; --help</code> prints a quick summary. When you forget what a flag does, this is the answer — not Google.",
+      "body": "<code>man &lt;command&gt;</code> opens the manual page. <code>&lt;command&gt; --help</code> prints a quick summary. When you forget what a flag does, this is the answer — not Google, not a tab in your browser. The docs are on your machine, offline, and they're the authoritative source.",
+      "tryCue": "Open the <code>ls</code> man page, then quit it.",
       "code": "man ls",
       "notes": [
         "Scroll with arrow keys or space bar.",
         "Search inside the page with <code>/</code> followed by your search term, then Enter.",
         "Press <code>q</code> to quit."
       ],
-      "verify": "You opened the man page for <code>ls</code> and quit it with <code>q</code>."
+      "commandNotes": [
+        {
+          "key": "man <command>",
+          "what": "Open the manual page for a command in a scrollable viewer. Press <code>q</code> to quit.",
+          "when": "You half-remember a flag and want to confirm the exact name — <code>man ls</code> for the <code>-la</code> options, <code>man grep</code> for the recursive flag."
+        },
+        {
+          "key": "<command> --help",
+          "what": "Print a short usage summary directly to the terminal. Faster than <code>man</code> for a quick refresher.",
+          "when": "You want a one-screen reminder of subcommands and flags without opening a pager — <code>git --help</code>, <code>npm --help</code>, <code>brew --help</code>."
+        }
+      ],
+      "verify": "You opened the man page for <code>ls</code> and quit it with <code>q</code>.",
+      "whenYoullReachForThis": [
+        "You forgot which flag is recursive — <code>man grep</code> or <code>grep --help</code>",
+        "A command isn't doing what you expected and you want to check the exact behavior before guessing",
+        "Claude Code suggests a flag and you want to verify it exists before running it",
+        "A blog post from 2017 uses a flag that may have changed — <code>man</code> shows what your version actually supports"
+      ]
     },
     {
       "id": "s13",
       "title": "Clean up",
       "estimate": "5 min",
       "body": "Delete the practice directory. You're back to a clean home directory.",
+      "tryCue": "Run all three. The last command should error — that's success.",
       "code": "cd ~\nrm -r mve-practice\nls mve-practice",
       "verify": "Final <code>ls</code> errors with <code>No such file or directory</code> — because the directory is gone. That's the success state."
     }
