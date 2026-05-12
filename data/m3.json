@@ -3,7 +3,7 @@
   "title": "Git & GitHub",
   "phase": "Phase 1 — Infrastructure",
   "phaseColor": "purple",
-  "estimate": "3–6 hr",
+  "estimate": "2–4 hr",
   "prereqs": "M1 and M2 complete",
   "briefing": {
     "headline": "Without this, you lose work. With it, you can ship.",
@@ -59,63 +59,219 @@
       "id": "s1",
       "title": "Configure your identity",
       "estimate": "5 min",
-      "body": "Every commit Git makes is signed with a name and email. Set them once, globally — they apply to every repo on this machine. Use the same email you'll use for GitHub.",
+      "body": "Every commit Git makes is signed with a name and email. Set them once, globally — they apply to every repo on this machine. Use the same email you'll use for GitHub, otherwise GitHub won't attribute your commits to your profile.",
+      "tryCue": "Run all four. They write to <code>~/.gitconfig</code>.",
       "code": "git config --global user.name \"Your Name\"\ngit config --global user.email \"you@example.com\"\ngit config --global init.defaultBranch main\ngit config --global pull.rebase false",
-      "verify": "Run <code>git config --global --list</code>. You see <code>user.name</code>, <code>user.email</code>, and <code>init.defaultBranch=main</code>."
+      "commandNotes": [
+        {
+          "key": "user.name / user.email",
+          "what": "Your identity on every commit, on this machine, in every repo unless overridden per-repo.",
+          "when": "First time setting up a new Mac. Also the first thing to check if <code>git commit</code> errors with <code>Please tell me who you are</code>, or if commits show the wrong author on GitHub."
+        },
+        {
+          "key": "init.defaultBranch main",
+          "what": "Makes new repos start on <code>main</code> instead of the legacy <code>master</code>.",
+          "when": "Standard everywhere now — GitHub, GitLab, every modern codebase uses <code>main</code>. Without this setting, <code>git init</code> creates a <code>master</code> branch and you'll have to rename it."
+        },
+        {
+          "key": "pull.rebase false",
+          "what": "Tells <code>git pull</code> to merge remote changes (the default behavior) rather than rebase. Predictable, beginner-friendly.",
+          "when": "Stops Git from nagging with <code>hint: Pulling without specifying how to reconcile divergent branches</code> the first time you <code>git pull</code> with local changes."
+        }
+      ],
+      "verify": "Run <code>git config --global --list</code>. You see <code>user.name</code>, <code>user.email</code>, <code>init.defaultBranch=main</code>, and <code>pull.rebase=false</code>.",
+      "whenYoullReachForThis": [
+        "Setting up a new Mac — these are the first commands before any <code>git init</code> or <code>git clone</code>",
+        "Switching email for a work account on the same machine — <code>git config user.email</code> (without <code>--global</code>) sets it per-repo",
+        "Commits showing the wrong author on GitHub — check <code>git config --global user.email</code> matches your GitHub email",
+        "Cloning a repo on a fresh machine and the very first <code>git commit</code> errors with \"Please tell me who you are\""
+      ]
     },
     {
       "id": "s2",
       "title": "Make your first repo",
       "estimate": "10 min",
-      "body": "<code>git init</code> turns any folder into a Git repository. It creates a hidden <code>.git/</code> directory that stores all the version history.",
+      "body": "<code>git init</code> turns any folder into a Git repository. It creates a hidden <code>.git/</code> directory that stores all the version history — every change, every commit message, every author. The folder is otherwise normal; you can still work with it from Finder, VS Code, or the terminal.",
+      "tryCue": "Run all five. Watch what <code>ls -la</code> reveals after <code>git init</code>.",
       "code": "cd ~\nmkdir mve-git-practice\ncd mve-git-practice\ngit init\nls -la",
-      "verify": "<code>ls -la</code> shows a <code>.git</code> directory. Run <code>git status</code> — it says <code>On branch main</code> and <code>No commits yet</code>."
+      "commandNotes": [
+        {
+          "key": "git init",
+          "what": "Creates a new Git repository in the current directory by making a <code>.git/</code> subfolder. Doesn't touch any other files.",
+          "when": "Starting a brand-new project that doesn't exist on GitHub yet. Or adopting an existing folder into Git — <code>cd</code> into it, <code>git init</code>, add a <code>.gitignore</code>, commit."
+        },
+        {
+          "key": "ls -la",
+          "what": "Long listing with hidden files. Reveals the new <code>.git/</code> directory.",
+          "when": "Confirming a folder is actually a Git repo without running <code>git status</code>. Or curious what hidden files a project tracks — <code>.env</code>, <code>.github/</code>, <code>.gitignore</code>."
+        }
+      ],
+      "verify": "<code>ls -la</code> shows a <code>.git</code> directory. Run <code>git status</code> — it says <code>On branch main</code> and <code>No commits yet</code>.",
+      "whenYoullReachForThis": [
+        "Starting any new local project before pushing it to GitHub",
+        "Putting an old un-tracked folder under version control — <code>cd</code> in, <code>git init</code>, add a <code>.gitignore</code>, commit",
+        "Setting up a scratch repo to test a Git command without risking a real project",
+        "After accidentally deleting <code>.git/</code> — <code>git init</code> starts fresh, but all history is gone"
+      ]
     },
     {
       "id": "s3",
       "title": "The commit loop",
-      "estimate": "30 min",
-      "body": "The basic Git rhythm: change a file, <code>git status</code> to see what's changed, <code>git add</code> to stage, <code>git commit</code> to save. You'll do this hundreds of times.",
+      "estimate": "15 min",
+      "body": "The basic Git rhythm: change a file, <code>git status</code> to see what's changed, <code>git add</code> to stage, <code>git commit</code> to save. You'll do this hundreds of times per project. Most of Git is variations on this loop.",
+      "tryCue": "Run all six. Read each <code>git status</code> output carefully — the state changes between them.",
       "code": "echo \"# MVE Git Practice\" > README.md\ngit status\ngit add README.md\ngit status\ngit commit -m \"Add README\"\ngit status",
-      "notes": [
-        "After <code>echo</code>: <code>git status</code> says <code>README.md</code> is untracked.",
-        "After <code>git add</code>: status shows it as <code>Changes to be committed</code>.",
-        "After <code>git commit</code>: status says <code>nothing to commit, working tree clean</code>."
+      "commandNotes": [
+        {
+          "key": "git status",
+          "what": "Shows what's changed since the last commit, what's staged, and what's untracked.",
+          "when": "The most-run Git command, period. Before every <code>git add</code> to confirm what you're about to stage. Before every commit to confirm what's in it."
+        },
+        {
+          "key": "git add <file>",
+          "what": "Stages the file for the next commit — moves it into Git's \"staging area\" without committing yet.",
+          "when": "You've edited several files and only want to commit some of them. <code>git add &lt;file&gt;</code> stages just that one; <code>git add .</code> stages everything in the working directory."
+        },
+        {
+          "key": "git commit -m \"...\"",
+          "what": "Snapshots the staged changes with a message. The message becomes part of the project's permanent history.",
+          "when": "Every time you have a logical chunk of work complete. Good messages describe what changed in the imperative: <code>Add login form</code>, not <code>Added login form</code> or <code>Login form changes</code>."
+        }
       ],
       "verify": "Final <code>git status</code> shows: <code>nothing to commit, working tree clean</code>.",
-      "trouble": "If commit errors with <code>Please tell me who you are</code>: you skipped Step 1. Run those config commands, then retry the commit."
+      "trouble": "If commit errors with <code>Please tell me who you are</code>: you skipped Step 1. Run those config commands, then retry the commit.",
+      "whenYoullReachForThis": [
+        "Every commit you ever make follows this loop — status, add, commit",
+        "Reviewing what you're about to commit before pushing — <code>git status</code> followed by <code>git diff --staged</code>",
+        "Cherry-picking which changes to include — <code>git add</code> some files, leave others uncommitted",
+        "Saving work mid-task before switching branches or stepping away — even a rough commit beats losing changes",
+        "After Claude Code modifies several files — <code>git status</code> tells you what changed before you decide whether to keep it"
+      ]
     },
     {
       "id": "s4",
       "title": "View history and diffs",
-      "estimate": "15 min",
-      "body": "<code>git log</code> shows the commit history — newest first. <code>--oneline</code> compresses it. <code>git diff</code> shows what's changed since the last commit, before you stage anything.",
+      "estimate": "10 min",
+      "body": "<code>git log</code> shows the commit history — newest first. <code>--oneline</code> compresses it to one commit per line. <code>git diff</code> shows what's changed since the last commit, before you stage anything. These three commands answer most \"what happened?\" questions.",
+      "tryCue": "Run all six. <code>git diff</code> output should match what you just added.",
       "code": "echo \"\" >> README.md\necho \"Practice repo for Git basics.\" >> README.md\ngit diff\ngit add README.md\ngit commit -m \"Add description to README\"\ngit log --oneline",
-      "verify": "<code>git diff</code> showed the new lines you added (in green, with <code>+</code> in front). <code>git log --oneline</code> shows two commits."
+      "commandNotes": [
+        {
+          "key": "git diff",
+          "what": "Shows unstaged changes line by line. Added lines in green with <code>+</code>, removed in red with <code>-</code>.",
+          "when": "Before <code>git add</code>, to confirm what you actually changed. After Claude Code edits a file, to see exactly what it did before you stage it."
+        },
+        {
+          "key": "git diff --staged",
+          "what": "Same as <code>git diff</code> but shows what's already staged — what's about to be committed.",
+          "when": "Right before <code>git commit</code>, as a last sanity check. \"Am I about to commit what I think I'm committing?\""
+        },
+        {
+          "key": "git log --oneline",
+          "what": "Compact commit history — one line per commit, with the short hash and message.",
+          "when": "Skimming recent history to find when something changed. The full <code>git log</code> is too verbose for fast reading; <code>--oneline</code> is the daily form."
+        }
+      ],
+      "verify": "<code>git diff</code> showed your new lines (in green, with <code>+</code> in front). <code>git log --oneline</code> shows two commits.",
+      "whenYoullReachForThis": [
+        "Reviewing what you changed before committing — <code>git diff</code>",
+        "Finding the commit where a bug was introduced — <code>git log --oneline</code> to scan, then <code>git show &lt;hash&gt;</code>",
+        "Checking what a teammate did since you last pulled — <code>git log --oneline origin/main..HEAD</code>",
+        "Debugging \"what did Claude Code actually change?\" — <code>git diff</code> right after it finishes",
+        "Confirming a refactor didn't sneak in unintended changes — <code>git diff --staged</code> before commit"
+      ]
     },
     {
       "id": "s5",
       "title": "Add a .gitignore",
-      "estimate": "20 min",
-      "body": "A <code>.gitignore</code> file tells Git which paths to never track. Anything regenerated automatically (<code>node_modules/</code>) or that contains secrets (<code>.env</code>) belongs here. Macs also litter every folder with <code>.DS_Store</code> files — those should be ignored too.",
+      "estimate": "15 min",
+      "body": "A <code>.gitignore</code> file tells Git which paths to never track. Anything regenerated automatically (<code>node_modules/</code>), anything with secrets (<code>.env</code>), and anything macOS scatters into every folder (<code>.DS_Store</code>) belongs here. Without one, you'll eventually commit a 200MB <code>node_modules</code> or an API key.",
+      "tryCue": "Run all seven. The proof: does <code>git status</code> ignore <code>.DS_Store</code>?",
       "code": "echo \".DS_Store\" > .gitignore\necho \"node_modules/\" >> .gitignore\necho \".env\" >> .gitignore\ntouch .DS_Store\ngit status\ngit add .gitignore\ngit commit -m \"Add .gitignore\"",
-      "verify": "Before the commit, <code>git status</code> showed <code>.gitignore</code> as a new file but did not show <code>.DS_Store</code> — Git is correctly ignoring it. After the commit, <code>git log --oneline</code> shows three commits."
+      "commandNotes": [
+        {
+          "key": ".DS_Store",
+          "what": "macOS metadata file Finder creates in every folder it opens. Useless on other systems; pure noise in a repo.",
+          "when": "Every repo on macOS needs this in <code>.gitignore</code>. Otherwise Finder leaves one for you every time you open the folder."
+        },
+        {
+          "key": "node_modules/",
+          "what": "Trailing slash means \"this directory and everything inside it.\" <code>node_modules/</code> is regenerated by <code>npm install</code> from <code>package.json</code> — there's no reason to track it.",
+          "when": "Every JavaScript project. Skipping this is the most common way new repos balloon to gigabytes."
+        },
+        {
+          "key": ".env",
+          "what": "The conventional filename for environment variables — API keys, database URLs, secrets.",
+          "when": "Always. Committing <code>.env</code> is how API keys end up in public GitHub repos and how cloud bills hit five digits before anyone notices."
+        }
+      ],
+      "verify": "Before the commit, <code>git status</code> showed <code>.gitignore</code> as a new file but did not show <code>.DS_Store</code> — Git is correctly ignoring it. After the commit, <code>git log --oneline</code> shows three commits.",
+      "whenYoullReachForThis": [
+        "Starting any new project — <code>.gitignore</code> goes in before your first <code>git add</code>",
+        "Adopting a project that doesn't have one — symptom is <code>git status</code> listing <code>node_modules</code> or <code>.DS_Store</code> as changes",
+        "Adding a new tool that creates a build folder (<code>dist/</code>, <code>.next/</code>, <code>build/</code>) — add it to <code>.gitignore</code> right then",
+        "After accidentally committing a secret — add to <code>.gitignore</code>, then <code>git rm --cached &lt;file&gt;</code>, then rotate the secret"
+      ]
     },
     {
       "id": "s6",
       "title": "Branches",
-      "estimate": "30 min",
-      "body": "A branch is an independent line of work. You start on <code>main</code>. When you want to try something without risking the working version, you make a branch. <code>git switch -c &lt;name&gt;</code> creates and switches in one move.",
+      "estimate": "20 min",
+      "body": "A branch is an independent line of work. You start on <code>main</code>. When you want to try something without risking the working version — a feature, an experiment, a refactor — you make a branch. Switch to it, make changes there, leave <code>main</code> alone. If it works, you merge it back. If not, you delete the branch and nothing ever happened to <code>main</code>.",
+      "tryCue": "Run all seven. The final <code>cat</code> proves the branches are independent.",
       "code": "git switch -c experiment\necho \"Trying something new.\" >> README.md\ngit add README.md\ngit commit -m \"Try a new line\"\ngit log --oneline\ngit switch main\ncat README.md",
-      "verify": "After switching back to <code>main</code>, <code>cat README.md</code> doesn't show <code>Trying something new.</code> — that line only exists on the <code>experiment</code> branch."
+      "commandNotes": [
+        {
+          "key": "git switch -c <name>",
+          "what": "Create a new branch and switch to it in one command. <code>-c</code> stands for \"create.\"",
+          "when": "Starting any unit of work bigger than a typo fix — a new feature, a refactor, an experiment. Especially anywhere you might want to throw the work away cleanly."
+        },
+        {
+          "key": "git switch main",
+          "what": "Switch back to <code>main</code> without creating anything. Your working directory updates to match <code>main</code>.",
+          "when": "Returning to the known-good version after an experiment didn't pan out. Or jumping back to fix an unrelated bug while a feature branch is in flight."
+        },
+        {
+          "key": "git log --oneline",
+          "what": "Commit history of the current branch.",
+          "when": "Confirming a commit landed where you expected — sometimes you commit thinking you're on <code>feature/x</code> and you're actually on <code>main</code>."
+        }
+      ],
+      "verify": "After switching back to <code>main</code>, <code>cat README.md</code> doesn't show <code>Trying something new.</code> — that line only exists on the <code>experiment</code> branch.",
+      "whenYoullReachForThis": [
+        "Trying a refactor or new feature you're not sure will work — branch off, experiment, throw it away if it doesn't pan out",
+        "Pull request workflow — every PR is a branch off <code>main</code>",
+        "Hot-fixing a bug while a long feature branch is in flight — <code>git switch main</code>, branch off, fix, merge, switch back",
+        "Letting Claude Code experiment on a branch so you can review the diff before merging into <code>main</code>",
+        "Pairing on a project — each person works on their own branch and merges to <code>main</code> when ready"
+      ]
     },
     {
       "id": "s7",
       "title": "Merge a branch",
-      "estimate": "20 min",
-      "body": "Merging takes commits from one branch and applies them to another. To bring <code>experiment</code>'s changes into <code>main</code>, switch to <code>main</code> first, then merge.",
+      "estimate": "15 min",
+      "body": "Merging takes commits from one branch and applies them to another. To bring <code>experiment</code>'s changes into <code>main</code>, switch to <code>main</code> first, then merge. After a successful merge, the experiment branch has done its job — delete it so the branch list doesn't pile up.",
+      "tryCue": "Run all five. <code>cat README.md</code> should now show the line from <code>experiment</code>.",
       "code": "git switch main\ngit merge experiment\ncat README.md\ngit log --oneline\ngit branch -d experiment",
-      "verify": "<code>README.md</code> now contains the new line. <code>git log --oneline</code> shows the experiment commit on <code>main</code>. <code>git branch</code> shows only <code>main</code>."
+      "commandNotes": [
+        {
+          "key": "git merge <branch>",
+          "what": "Brings commits from <code>&lt;branch&gt;</code> into the branch you're currently on. Always run from the <em>destination</em> branch — \"I'm on main, merge experiment into me.\"",
+          "when": "Bringing a finished feature branch into <code>main</code>. In larger teams, this happens via a pull request on GitHub instead of locally — but the underlying operation is the same."
+        },
+        {
+          "key": "git branch -d <branch>",
+          "what": "Deletes a branch that's already been merged. The <code>-d</code> protects you — Git refuses if there are unmerged commits.",
+          "when": "Right after merging a feature branch. Leaving merged branches around clutters <code>git branch</code> output and confuses future you."
+        }
+      ],
+      "verify": "<code>README.md</code> now contains the new line. <code>git log --oneline</code> shows the experiment commit on <code>main</code>. <code>git branch</code> shows only <code>main</code>.",
+      "whenYoullReachForThis": [
+        "Finishing a feature on a branch — switch to <code>main</code>, merge, delete the branch",
+        "Pulling a teammate's changes after their PR was merged on GitHub — <code>git switch main</code>, <code>git pull</code> (which is fetch + merge)",
+        "Resolving a merge conflict — Git stops mid-merge, you edit the conflicting files, <code>git add</code>, <code>git commit</code>",
+        "Cleaning up after a sprint — list merged branches with <code>git branch --merged</code>, delete the dead ones"
+      ]
     },
     {
       "id": "s8",
@@ -123,7 +279,7 @@
       "estimate": "10 min",
       "tag": "Optional",
       "tagOptional": true,
-      "body": "Skip if you already have one. Otherwise: github.com → Sign up. Use the same email you used in <code>git config</code>.",
+      "body": "Skip if you already have one. Otherwise: github.com → Sign up. Use the same email you used in <code>git config</code> — otherwise GitHub won't attribute your commits to your profile.",
       "notes": [
         "Pick a username you can live with — it'll be in the URL of every public repo you ever make.",
         "Verify your email when GitHub sends the link.",
@@ -135,72 +291,145 @@
       "id": "s9",
       "title": "Generate an SSH key",
       "estimate": "10 min",
-      "body": "SSH keys let your Mac authenticate to GitHub without typing a password every time. Generate one tied to your GitHub email.",
+      "body": "SSH keys let your Mac authenticate to GitHub without typing a password every time. You generate a matched pair — a private key that stays on your machine forever and a public key you give to GitHub. The public one is safe to share. The private one is not. When prompted for a file location, press Enter to accept the default. When prompted for a passphrase, press Enter twice for none — or set one if you prefer.",
+      "tryCue": "Run it. Press Enter through the prompts.",
       "code": "ssh-keygen -t ed25519 -C \"you@example.com\"",
-      "notes": [
-        "Use your GitHub email instead of <code>you@example.com</code>.",
-        "When prompted for a file location, press Enter to accept the default.",
-        "When prompted for a passphrase, press Enter twice for none — or set one if you prefer."
+      "commandNotes": [
+        {
+          "key": "ssh-keygen",
+          "what": "Generates an SSH key pair. Default location: <code>~/.ssh/</code>.",
+          "when": "Setting up a new Mac. Or adding a new identity for a separate account (work vs. personal GitHub). Or rotating keys if you suspect one was leaked."
+        },
+        {
+          "key": "-t ed25519",
+          "what": "Sets the key type. Ed25519 is the modern default — shorter and faster than the older RSA.",
+          "when": "Always for new keys. RSA still works but there's no reason to pick it for new keys in 2026."
+        },
+        {
+          "key": "-C \"you@example.com\"",
+          "what": "Comment field embedded in the public key. Just a label — usually your email — that helps you identify the key later.",
+          "when": "Telling keys apart on a machine with several — work GitHub key, personal GitHub key, server access key. The comment shows up at the end of the public key file."
+        }
       ],
-      "verify": "<code>ls ~/.ssh</code> shows <code>id_ed25519</code> and <code>id_ed25519.pub</code>."
+      "verify": "<code>ls ~/.ssh</code> shows <code>id_ed25519</code> and <code>id_ed25519.pub</code>.",
+      "whenYoullReachForThis": [
+        "Setting up a new Mac — first thing before <code>git push</code> will work",
+        "Adding access to a remote server you SSH into — the same public key gets pasted into <code>~/.ssh/authorized_keys</code> there",
+        "Rotating keys after suspecting one was compromised — generate a new pair, replace the public key in GitHub, delete the old private key",
+        "Setting up a second GitHub identity (work + personal on the same machine) — second key, custom filename, configured in <code>~/.ssh/config</code>"
+      ]
     },
     {
       "id": "s10",
       "title": "Add the SSH key to GitHub",
       "estimate": "10 min",
       "body": "Copy your public key and paste it into GitHub. The public one ends in <code>.pub</code> — never share the one without <code>.pub</code>.",
+      "tryCue": "Run this first — it copies your public key to the clipboard.",
       "code": "pbcopy < ~/.ssh/id_ed25519.pub",
+      "commandNotes": [
+        {
+          "key": "pbcopy",
+          "what": "Reads from stdin and copies to the macOS clipboard. The <code>&lt;</code> redirects the file's contents into pbcopy.",
+          "when": "Piping any command's output into the clipboard. <code>git log --oneline | pbcopy</code> grabs a commit list. <code>cat file.txt | pbcopy</code> copies a whole file."
+        }
+      ],
       "notes": [
-        "<code>pbcopy</code> copies the file's contents to your clipboard.",
         "Go to github.com → click your avatar (top right) → <strong>Settings</strong>.",
         "<strong>SSH and GPG keys</strong> in the left sidebar.",
         "<strong>New SSH key</strong>. Title it something like \"MacBook\". Paste into the Key field. Save."
       ],
       "verify": "Run <code>ssh -T git@github.com</code> in iTerm2. It says <code>Hi &lt;your-username&gt;! You've successfully authenticated</code>.",
-      "trouble": "If it says <code>The authenticity of host 'github.com' can't be established</code> — type <code>yes</code> and press Enter. That's a one-time confirmation."
+      "trouble": "If it says <code>The authenticity of host 'github.com' can't be established</code> — type <code>yes</code> and press Enter. That's a one-time confirmation.",
+      "whenYoullReachForThis": [
+        "Setting up GitHub access on a new Mac — generate key, <code>pbcopy</code>, paste in GitHub",
+        "Adding a second machine to your GitHub account — same flow, separate key per machine, named after the machine",
+        "Setting up SSH for any other host that supports it (a server, GitLab, Bitbucket) — same pattern, different paste destination",
+        "Diagnosing \"Permission denied (publickey)\" — confirm a key in <code>~/.ssh/</code> matches one in your GitHub settings"
+      ]
     },
     {
       "id": "s11",
       "title": "Push to GitHub",
-      "estimate": "20 min",
-      "body": "Create a repo on GitHub, link it to your local repo, push your commits up.",
-      "notes": [
-        "On github.com, click the <strong>+</strong> (top right) → <strong>New repository</strong>.",
-        "Name it <code>mve-git-practice</code>. Don't add a README, .gitignore, or license — your local repo already has them.",
-        "Click <strong>Create repository</strong>.",
-        "GitHub shows you a setup page. Copy the SSH URL (starts with <code>git@github.com:</code>).",
-        "Back in iTerm2, in your <code>mve-git-practice</code> folder, run the two commands below. Replace <code>YOUR_USERNAME</code> with yours."
-      ],
+      "estimate": "15 min",
+      "body": "Create a repo on GitHub, link it to your local repo, push your commits up. On github.com, click <strong>+</strong> (top right) → <strong>New repository</strong>. Name it <code>mve-git-practice</code>. Don't add a README, .gitignore, or license — your local repo already has them. Click <strong>Create repository</strong>. GitHub then shows a setup page with an SSH URL (starts with <code>git@github.com:</code>). Copy that URL — you'll paste it into the command below.",
+      "tryCue": "Replace <code>YOUR_USERNAME</code> with yours, then run both lines from your <code>mve-git-practice</code> folder.",
       "code": "git remote add origin git@github.com:YOUR_USERNAME/mve-git-practice.git\ngit push -u origin main",
-      "verify": "Refresh the GitHub repo page. Your README, .gitignore, and three commits are visible."
+      "commandNotes": [
+        {
+          "key": "git remote add origin <url>",
+          "what": "Adds a named remote — a shortcut for a URL. <code>origin</code> is the conventional name for the primary remote (usually GitHub).",
+          "when": "First push of any new local repo to GitHub. Done once per repo — after that, <code>git push</code> already knows where to send commits."
+        },
+        {
+          "key": "git push -u origin main",
+          "what": "Push <code>main</code> to <code>origin</code>, and set <code>origin/main</code> as the upstream. <code>-u</code> means future <code>git push</code> from this branch needs no arguments.",
+          "when": "First push of any new branch — the <code>-u</code> sets the tracking relationship. Without it, future pushes need <code>git push origin main</code> spelled out every time."
+        }
+      ],
+      "verify": "Refresh the GitHub repo page. Your README, .gitignore, and three commits are visible.",
+      "whenYoullReachForThis": [
+        "Pushing a brand-new local repo to GitHub for the first time — these two commands, every time",
+        "Adding a second remote (a fork, a deploy target) — <code>git remote add &lt;name&gt; &lt;url&gt;</code> with a name other than <code>origin</code>",
+        "After the first push, just <code>git push</code> works — no arguments needed once the upstream is set",
+        "Switching a repo to a new GitHub account or org — <code>git remote set-url origin &lt;new-url&gt;</code>"
+      ]
     },
     {
       "id": "s12",
       "title": "Edit on GitHub, pull locally",
-      "estimate": "15 min",
-      "body": "Simulate the situation where the remote has changes you don't. Edit a file directly in GitHub's web UI, then pull those changes down.",
-      "notes": [
-        "On the GitHub repo page, click <code>README.md</code>.",
-        "Click the pencil icon (top right of the file view) to edit.",
-        "Add a new line. Click <strong>Commit changes</strong> at the top right, then <strong>Commit changes</strong> again in the dialog.",
-        "Back in iTerm2, run the commands below."
-      ],
+      "estimate": "10 min",
+      "body": "Simulate the situation where the remote has changes you don't. Edit a file directly in GitHub's web UI, then pull those changes down. On the GitHub repo page, click <code>README.md</code>. Click the pencil icon (top right of the file view) to edit. Add a new line. Click <strong>Commit changes</strong> at the top right, then <strong>Commit changes</strong> again in the dialog.",
+      "tryCue": "Then back in iTerm2, run all three.",
       "code": "git pull\ncat README.md\ngit log --oneline",
-      "verify": "<code>README.md</code> contains the line you added on GitHub. <code>git log</code> shows the new commit."
+      "commandNotes": [
+        {
+          "key": "git pull",
+          "what": "Fetches commits from the remote and merges them into the current branch. <code>fetch</code> + <code>merge</code> in one command.",
+          "when": "Starting work on a project after someone else (or web-UI you) has pushed changes. Run it as your first move when sitting down at a shared repo."
+        }
+      ],
+      "verify": "<code>README.md</code> contains the line you added on GitHub. <code>git log --oneline</code> shows the new commit.",
+      "whenYoullReachForThis": [
+        "Starting a project session after a teammate pushed overnight — <code>git pull</code> is the first command",
+        "Working on a repo across two machines — push from one, pull from the other",
+        "After editing via GitHub's web UI (quick fix to a README, a single-line PR change) — <code>git pull</code> to sync local",
+        "Resolving a divergent local branch — Git stops mid-pull, you fix conflicts, commit, finish the merge"
+      ]
     },
     {
       "id": "s13",
       "title": "Undo: amend the last commit",
       "estimate": "10 min",
-      "body": "Made a typo in the last commit message, or forgot to include a file? <code>--amend</code> rewrites the last commit instead of making a new one. Only use this on commits you haven't pushed yet — amending a pushed commit makes a mess for anyone who already pulled.",
+      "body": "Two things go wrong often: you commit and realize you forgot to include a file, or you spot a typo in the commit message the instant after you save it. <code>--amend</code> fixes both — it replaces the last commit with a new one, no additional \"oops\" commit polluting history. The constraint: only safe before you push. Amending a commit that's already on GitHub rewrites history that may have already been pulled.",
+      "tryCue": "Run all four. The commit count stays the same; the most recent hash changes.",
       "code": "echo \"One more line.\" >> README.md\ngit add README.md\ngit commit --amend --no-edit\ngit log --oneline",
-      "verify": "<code>git log --oneline</code> shows the same number of commits as before the amend. The most recent commit's hash has changed — that's the rewrite."
+      "commandNotes": [
+        {
+          "key": "git commit --amend",
+          "what": "Replaces the last commit with a new one that includes your currently-staged changes. Opens the message editor by default.",
+          "when": "You committed and immediately realized you forgot to add a file — <code>git add &lt;missing-file&gt;</code>, then <code>git commit --amend</code>. Or you want to fix a typo in the last commit message."
+        },
+        {
+          "key": "--no-edit",
+          "what": "Skip opening the message editor — keep the existing commit message.",
+          "when": "You're just adding a forgotten file to the last commit and don't want to change the message. Without <code>--no-edit</code>, Git opens vim and waits for you to save."
+        }
+      ],
+      "verify": "<code>git log --oneline</code> shows the same number of commits as before the amend. The most recent commit's hash has changed — that's the rewrite.",
+      "trouble": "If you've already pushed and then amend, the next <code>git push</code> will be rejected with \"Updates were rejected.\" You can force it with <code>git push --force-with-lease</code>, but never do that on a shared branch.",
+      "whenYoullReachForThis": [
+        "Spotting a typo in the commit message you just made — <code>git commit --amend</code> rewrites the message",
+        "Forgetting to <code>git add</code> a file before committing — <code>git add</code> it, then <code>git commit --amend --no-edit</code>",
+        "Tidying up a commit before the first push — better to amend than to leave a \"fix typo\" commit cluttering history",
+        "Working on a personal branch nobody else pulls from — amend freely; the constraint only matters on shared branches"
+      ]
     },
     {
       "id": "s14",
       "title": "Clean up",
       "estimate": "5 min",
       "body": "Delete the practice folder locally. Optionally delete the GitHub repo too (Settings → scroll to bottom → <strong>Delete this repository</strong>).",
+      "tryCue": "Run both lines.",
       "code": "cd ~\nrm -rf mve-git-practice",
       "verify": "Folder is gone."
     }

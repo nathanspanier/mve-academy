@@ -63,7 +63,7 @@
       "id": "s2",
       "title": "Confirm iTerm2 works",
       "estimate": "< 1 min",
-      "body": "Type a command. If it prints back, you're in business.",
+      "body": "Before installing anything else, confirm the shell is alive and taking commands.",
       "tryCue": "Type this and press Enter.",
       "code": "echo \"iTerm2 is working\"",
       "verify": "Output: <code>iTerm2 is working</code>"
@@ -169,10 +169,10 @@
       "estimate": "5 min",
       "tag": "Optional",
       "tagOptional": true,
-      "body": "A framework that makes your prompt more informative and adds shortcuts. Many devs use it. Skip if you want simplicity — you can come back any time.",
+      "body": "A framework that layers on top of zsh — opinionated defaults, a plugin system, and a prompt that shows your current Git branch. Most developers run it. The tradeoff: it adds a few hundred milliseconds to shell startup and can break if you edit the wrong files. Skip if you want simplicity; you can install it any time.",
       "tryCue": "Paste it. Wait for the prompt to change.",
       "code": "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"",
-      "verify": "Your prompt looks different after restart. That's the point."
+      "verify": "Your prompt changed — you'll see a styled <code>~</code> and Git branch info when you're inside a repo. Run <code>cd ~/mve-academy</code> to see it in action."
     }
   ]
 }

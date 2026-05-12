@@ -6,10 +6,10 @@
   "estimate": "3–5 hr",
   "prereqs": "M0 complete",
   "briefing": {
-    "headline": "Get fluent. Or stay slow forever.",
+    "headline": "You've been doing this. Now understand what you did.",
     "body": [
-      "The terminal is a text interface to your filesystem and your processes. Everything you'll do here you could also do with Finder and Activity Monitor — slower, with worse tools, and with no way to script it. Most PMs know three commands: cd, ls, clear. That's not enough.",
-      "This is a practice module. Read the step, type the commands yourself — don't paste — and don't move on until the verify passes. Fluency comes from repetition, not from understanding."
+      "You've already run <code>brew install</code>, <code>cd</code>, <code>git push</code>, and <code>chmod +x</code>. You got output. Some of it made sense. Some of it didn't. This module is about closing that gap — not by starting from scratch, but by pulling apart the commands you've already used and explaining what every piece actually does.",
+      "Type the commands yourself. Don't paste. The point isn't to produce output — it's to build a mental model of what's happening. The verify at the end of each step tells you what success looks like. Don't move on until you see it."
     ]
   },
   "reference": [
@@ -59,7 +59,7 @@
       "id": "s1",
       "title": "Where you are, what's here",
       "estimate": "10 min",
-      "body": "Two questions every terminal session starts with: where am I, and what's in this directory? Two commands answer both. <code>ls -la</code> adds detail — file sizes, dates, and entries that begin with a dot (hidden files like <code>.env</code>, <code>.gitignore</code>, <code>.github/</code>).",
+      "body": "Two questions every terminal session starts with: where am I, and what's in this directory? Two commands answer both. <code>ls -la</code> adds detail — file sizes, dates, and entries that begin with a dot (hidden files like <code>.env</code>, <code>.gitignore</code>, <code>.github/</code>). You've probably run <code>ls</code> or <code>cd</code> without knowing exactly what they return — run all three now and read the output before moving on.",
       "tryCue": "Run all three. Read each output before running the next.",
       "code": "pwd\nls\nls -la",
       "commandNotes": [
@@ -183,7 +183,7 @@
       "id": "s5",
       "title": "Put content in, read it back",
       "estimate": "20 min",
-      "body": "Six small tools that combine constantly. <code>echo</code> prints a string. <code>></code> redirects that output into a file instead of the screen — overwriting whatever was there. <code>>></code> appends instead of overwriting. <code>cat</code> dumps a whole file. <code>head</code> and <code>tail</code> show just the top or bottom. This pattern — \"run something, send its output somewhere\" — is how most real terminal work gets done.",
+      "body": "Six small tools that combine constantly. <code>echo</code> prints a string. <code>></code> redirects that output into a file instead of the screen — overwriting whatever was there. <code>>></code> appends instead of overwriting. <code>cat</code> dumps a whole file. <code>head</code> and <code>tail</code> show just the top or bottom. This pattern — \"run something, send its output somewhere\" — is how most real terminal work gets done. You used <code>>></code> in M0 to append the Homebrew PATH line to <code>~/.zprofile</code>; this is the step that explains what that did.",
       "tryCue": "Run all six lines in order. Read each output before moving on.",
       "code": "echo \"line one\" > poem.txt\necho \"line two\" >> poem.txt\necho \"line three\" >> poem.txt\ncat poem.txt\nhead -1 poem.txt\ntail -1 poem.txt",
       "commandNotes": [
@@ -380,7 +380,7 @@
       "id": "s11",
       "title": "Environment variables",
       "estimate": "15 min",
-      "body": "Variables your shell knows about. <code>$PATH</code> is the most important — it's the list of directories where your shell looks for commands. When you type <code>git</code> or <code>node</code>, the terminal doesn't magically know where those programs live; it searches PATH. \"Command not found\" means: \"I looked everywhere on PATH and didn't find it.\" This is also how Homebrew, nvm, and every installer make their tools available without you thinking about it.",
+      "body": "Variables your shell knows about. <code>$PATH</code> is the most important — it's the list of directories where your shell looks for commands. When you type <code>git</code> or <code>node</code>, the terminal doesn't magically know where those programs live; it searches PATH. \"Command not found\" means: \"I looked everywhere on PATH and didn't find it.\" This is also how Homebrew, nvm, and every installer make their tools available without you thinking about it. You already ran <code>echo 'eval ...' >> ~/.zprofile</code> in M0 — that command added Homebrew to PATH. This step explains what you actually did.",
       "tryCue": "Run all three. Read the output.",
       "code": "echo $PATH\necho $HOME\necho $SHELL",
       "commandNotes": [

@@ -1,14 +1,14 @@
 {
   "title": "MVE Academy",
   "subtitle": "Minimum Viable Engineer — a course for PMs who need to ship.",
-  "totalHours": 72,
+  "totalHours": 59,
   "totalWeeks": "5–6 weeks at 2 hrs/day",
   "phases": [
     {
       "id": "p1",
       "title": "Phase 1 — Infrastructure",
       "color": "purple",
-      "hours": 22,
+      "hours": 9,
       "weeks": "~2 weeks",
       "miniBuild": "A project folder, committed to GitHub. Your first real repo.",
       "modules": ["m0", "m1", "m2", "m3"]
@@ -55,7 +55,7 @@
       "id": "m0",
       "title": "Environment Setup",
       "desc": "iTerm2, Homebrew, verify everything works. Day zero.",
-      "hours": 2,
+      "hours": 1,
       "phase": "p1",
       "status": "ready",
       "unlocked": true
@@ -64,7 +64,7 @@
       "id": "m1",
       "title": "Terminal Fundamentals",
       "desc": "Navigation, files, processes, paths, errors, environment.",
-      "hours": 8,
+      "hours": 4,
       "phase": "p1",
       "status": "ready",
       "unlocked": true
@@ -73,7 +73,7 @@
       "id": "m2",
       "title": "VS Code",
       "desc": "Setup, extensions, integrated terminal, basic editing workflow.",
-      "hours": 3,
+      "hours": 1,
       "phase": "p1",
       "status": "ready",
       "unlocked": true
@@ -82,7 +82,7 @@
       "id": "m3",
       "title": "Git & GitHub",
       "desc": "Version control, commits, branches, push/pull, .gitignore. Why this is non-negotiable.",
-      "hours": 8,
+      "hours": 3,
       "phase": "p1",
       "status": "ready",
       "unlocked": true
