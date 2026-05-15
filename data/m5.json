@@ -1,0 +1,231 @@
+{
+  "id": "m5",
+  "title": "Node.js & npm",
+  "phase": "Phase 2 — The Language Layer",
+  "phaseColor": "teal",
+  "estimate": "2–4 hr",
+  "prereqs": "M4 complete",
+  "briefing": {
+    "headline": "JavaScript runs in two places. This is the other one.",
+    "body": [
+      "You already know JavaScript runs in browsers. Node.js is what makes it run everywhere else — on your laptop, on a server, inside Claude Code. When you ran <code>node scratch.js</code> in M4, that was Node.js. This module explains what that actually means and why it matters.",
+      "npm is the package manager that comes with Node. It's how Claude installs the libraries your app depends on — React, the Anthropic SDK, anything else. Understanding <code>package.json</code> and the install/run workflow means you'll stop being surprised when Claude says 'run npm install' and you don't know what that's about to do."
+    ]
+  },
+  "reference": [
+    {
+      "title": "npm essentials",
+      "type": "code",
+      "content": "npm install              Install all deps from package.json\nnpm install <pkg>        Install a specific package\nnpm install -D <pkg>     Install as devDependency\nnpm uninstall <pkg>      Remove a package\nnpm run <script>         Run a script from package.json\nnpm run dev              Most common — starts local dev server\nnpm run build            Compiles for production"
+    },
+    {
+      "title": "package.json skeleton",
+      "type": "code",
+      "content": "{\n  \"name\": \"riffle\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"start\": \"node server.js\"\n  },\n  \"dependencies\": {\n    \"@anthropic-ai/sdk\": \"^0.20.0\",\n    \"react\": \"^18.0.0\"\n  },\n  \"devDependencies\": {\n    \"vite\": \"^5.0.0\"\n  }\n}"
+    },
+    {
+      "title": "dependencies vs devDependencies",
+      "type": "text",
+      "content": "<strong>dependencies</strong> — packages your app needs to run in production. React, the Anthropic SDK, a database client.<br><strong>devDependencies</strong> — packages only needed during development. Bundlers (Vite, Webpack), test runners, linters. Installed with <code>-D</code>. Never shipped to users."
+    },
+    {
+      "title": "What node_modules is",
+      "type": "text",
+      "content": "The folder where <code>npm install</code> dumps every installed package and all of their dependencies. It can be thousands of files. Never commit it to Git — it's in <code>.gitignore</code> and regenerated from <code>package.json</code> via <code>npm install</code> on any new machine."
+    },
+    {
+      "title": "What package-lock.json is",
+      "type": "text",
+      "content": "A precise record of every installed package version, including dependencies of dependencies. Commit it. It ensures every machine installs identical versions. If Claude updates a package and something breaks, <code>git diff package-lock.json</code> shows exactly what changed."
+    },
+    {
+      "title": "\"Cannot find module 'X'\"",
+      "type": "text",
+      "content": "The package isn't installed. Run <code>npm install &lt;package-name&gt;</code>. Or run <code>npm install</code> without arguments to install everything in <code>package.json</code>."
+    },
+    {
+      "title": "\"Missing script: X\"",
+      "type": "text",
+      "content": "The script name in <code>npm run &lt;X&gt;</code> doesn't exist in <code>package.json</code>. Run <code>cat package.json</code> and look at the <code>scripts</code> block to see what's actually there."
+    }
+  ],
+  "completion": {
+    "headline": "M5 complete.",
+    "body": "You know how Node.js runs JavaScript outside the browser, how npm manages packages, and how package.json wires it together. Next up: M6 — JSON.",
+    "nextModule": "m6"
+  },
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Verify Node and npm",
+      "estimate": "5 min",
+      "body": "You installed Node.js via Homebrew in M0. Verify both are present and check versions — Claude Code and most modern frameworks have minimum version requirements.",
+      "tryCue": "Run both.",
+      "code": "node --version\nnpm --version",
+      "verify": "Node is v18 or higher. npm is v9 or higher. If either is missing, run <code>brew install node</code>.",
+      "trouble": "If <code>node</code> isn't found, run <code>brew install node</code>. If it's found but old (<16), run <code>brew upgrade node</code>."
+    },
+    {
+      "id": "s2",
+      "title": "What Node.js actually is",
+      "estimate": "15 min",
+      "body": "Node.js is a runtime — it's the engine that executes JavaScript files. Browsers have their own JavaScript engine (V8 in Chrome, SpiderMonkey in Firefox). Node.js took that same engine and made it run standalone, without a browser. That's why you can run <code>node file.js</code> in a terminal. It also gives JavaScript access to things browsers can't do: read files, start servers, connect to databases.",
+      "tryCue": "Run all three separately. Watch what each produces.",
+      "code": "node -e \"console.log('Node version:', process.version)\"\nnode -e \"console.log('Platform:', process.platform)\"\nnode -e \"console.log('Home dir:', require('os').homedir())\"",
+      "commandNotes": [
+        {
+          "key": "node -e \"...\"",
+          "what": "Execute a JavaScript expression directly in the terminal without a file. Good for quick checks.",
+          "when": "Testing a one-liner — converting a value, checking an environment variable, verifying a module is available."
+        },
+        {
+          "key": "process",
+          "what": "A global object Node.js provides — info about the current running process: version, platform, environment variables, working directory.",
+          "when": "You'll see <code>process.env.VARIABLE_NAME</code> everywhere in Claude-generated server code — that's how it reads API keys stored in <code>.env</code> files."
+        },
+        {
+          "key": "require('os')",
+          "what": "Imports Node's built-in <code>os</code> module. No install needed — it ships with Node.",
+          "when": "Built-in modules cover common system tasks: <code>os</code> (system info), <code>fs</code> (file system), <code>path</code> (file paths), <code>http</code> (servers). Claude uses them in non-browser code."
+        }
+      ],
+      "verify": "You see your Node version, your platform (<code>darwin</code> on Mac), and your home directory path.",
+      "whenYoullReachForThis": [
+        "Claude generates server-side code with <code>require('fs')</code> or <code>require('path')</code> — those are built-in Node modules, no install needed",
+        "A Claude Code session reads an API key with <code>process.env.ANTHROPIC_API_KEY</code> — that value comes from your shell environment",
+        "Checking what version of Node a project requires vs. what you have installed — compare <code>node --version</code> against the <code>.nvmrc</code> file or <code>engines</code> field in package.json"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Create a project and init package.json",
+      "estimate": "15 min",
+      "body": "<code>package.json</code> is the manifest for a Node project — it lists what the project is, what packages it depends on, and how to run it. <code>npm init -y</code> generates a default one without asking a dozen questions.",
+      "tryCue": "Run all three lines.",
+      "code": "mkdir ~/node-practice && cd ~/node-practice\nnpm init -y\ncat package.json",
+      "commandNotes": [
+        {
+          "key": "npm init -y",
+          "what": "Creates a <code>package.json</code> with defaults — project name from the folder name, version 1.0.0, no description. The <code>-y</code> skips the interactive questionnaire.",
+          "when": "Starting any new Node project. Claude usually does this for you, but you'll see it in setup instructions."
+        },
+        {
+          "key": "cat package.json",
+          "what": "Print the file contents to the terminal.",
+          "when": "Checking which scripts are available, what version of a package is installed, or confirming Claude updated the right fields."
+        }
+      ],
+      "verify": "<code>package.json</code> exists and contains <code>name</code>, <code>version</code>, <code>scripts</code>, and <code>main</code> fields.",
+      "whenYoullReachForThis": [
+        "Starting a new app from scratch — <code>npm init -y</code> before any other npm commands",
+        "Claude instructs you to create a project directory — this is usually step one",
+        "Checking if a folder is a Node project — does it have a <code>package.json</code>?"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Install a package",
+      "estimate": "15 min",
+      "body": "npm installs packages from the npm registry — a public repository of hundreds of thousands of JavaScript libraries. When you run <code>npm install</code>, npm downloads the package and all its dependencies into <code>node_modules/</code>, and records the version in <code>package.json</code> and <code>package-lock.json</code>.",
+      "tryCue": "Run these from the <code>node-practice</code> folder.",
+      "code": "npm install chalk\nls node_modules | head -20\ncat package.json",
+      "commandNotes": [
+        {
+          "key": "npm install chalk",
+          "what": "Downloads the <code>chalk</code> package (colorizes terminal output) and its dependencies into <code>node_modules/</code>. Adds it to <code>dependencies</code> in <code>package.json</code>.",
+          "when": "Any time Claude says \"install [package]\" — this is what you run. For dev-only tools (linters, bundlers), add <code>-D</code>."
+        },
+        {
+          "key": "ls node_modules | head -20",
+          "what": "Lists the first 20 entries in node_modules. Chalk has its own dependencies, so you'll see more than just chalk.",
+          "when": "Curiosity or debugging — confirming a package actually installed, or seeing what a package pulled in."
+        }
+      ],
+      "verify": "<code>node_modules/chalk</code> exists. <code>package.json</code> now has a <code>dependencies</code> block with <code>chalk</code> and a version number.",
+      "whenYoullReachForThis": [
+        "Claude adds a new import at the top of a file — run <code>npm install &lt;package-name&gt;</code> if the package isn't in your package.json yet",
+        "Setting up a project on a new machine — <code>npm install</code> (no arguments) installs everything in package.json",
+        "Checking what version of a package you have — look in package.json or <code>node_modules/&lt;package&gt;/package.json</code>"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Use the installed package",
+      "estimate": "10 min",
+      "body": "Installed packages are imported with <code>require()</code> (older CommonJS style) or <code>import</code> (modern ES modules). Claude defaults to whichever style the project uses. For this practice, chalk uses ES modules.",
+      "tryCue": "Create this file and run it.",
+      "code": "// Create the file\ncat > index.js << 'EOF'\nimport chalk from 'chalk';\n\nconsole.log(chalk.green('Catch logged successfully'));\nconsole.log(chalk.yellow('Species not recognized — check spelling'));\nconsole.log(chalk.red('Upload failed: network error'));\nEOF\n\n# Run it\nnode index.js",
+      "notes": [
+        "If you see <code>SyntaxError: Cannot use import statement in a module</code>, you need to tell Node this is an ES module. Open <code>package.json</code> in VS Code, add <code>\"type\": \"module\"</code> as a top-level field, and run <code>node index.js</code> again."
+      ],
+      "verify": "Terminal shows three lines of colored text — green, yellow, red.",
+      "trouble": "If you get <code>ERR_REQUIRE_ESM</code> or the import error, add <code>\"type\": \"module\"</code> to package.json. This is a common setup step Claude sometimes skips.",
+      "whenYoullReachForThis": [
+        "Claude generates code with <code>import X from 'package'</code> at the top — the package must be installed before this line can run",
+        "Switching between CommonJS (<code>require</code>) and ES modules (<code>import</code>) — which one the project uses is set in package.json's <code>type</code> field",
+        "A package works in the browser but not Node — some packages are browser-only; Claude should know, but ask if it's not clear"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "npm scripts",
+      "estimate": "15 min",
+      "body": "The <code>scripts</code> block in package.json is where you define shortcuts for common commands. <code>npm run dev</code> starts your local server. <code>npm run build</code> compiles for production. These are how you'll run every project — you don't need to remember the underlying commands, just the npm script names.",
+      "tryCue": "Open <code>package.json</code> in VS Code and add the scripts block. Then run each.",
+      "code": "// In package.json, update the scripts section to:\n// \"scripts\": {\n//   \"start\": \"node index.js\",\n//   \"greet\": \"node -e \\\"console.log('Ready to log catches.')\\\"\"\n// }\n\n# After saving package.json:\nnpm run start\nnpm run greet\nnpm run          # lists available scripts",
+      "commandNotes": [
+        {
+          "key": "npm run",
+          "what": "Without a script name, lists all available scripts from package.json.",
+          "when": "Dropped into an unfamiliar project and need to know how to start it. Faster than reading the README."
+        },
+        {
+          "key": "npm run start vs node index.js",
+          "what": "<code>npm run start</code> runs whatever command is defined in the <code>start</code> script. Indirection that makes the actual command portable.",
+          "when": "Always use <code>npm run &lt;script&gt;</code> rather than running the underlying command directly — the script may set environment variables or chain other steps."
+        }
+      ],
+      "verify": "<code>npm run start</code> runs the index.js file and shows colored output. <code>npm run</code> lists both scripts.",
+      "whenYoullReachForThis": [
+        "Claude tells you to run <code>npm run dev</code> — that script is defined in package.json and starts whatever dev server the project uses",
+        "Setting up a new project with Claude Code — Claude will add scripts; you'll run them",
+        "Inheriting a project — <code>npm run</code> tells you what commands exist without reading the whole README"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "Understand node_modules and .gitignore",
+      "estimate": "10 min",
+      "body": "<code>node_modules</code> can contain thousands of files totaling hundreds of megabytes. You never commit it. Any machine can regenerate it exactly from <code>package-lock.json</code> via <code>npm install</code>. This is why the MVE Academy's <code>.gitignore</code> has <code>node_modules/</code> in it — which you set up in M3.",
+      "tryCue": "Run these to see the scale.",
+      "code": "ls node_modules | wc -l\ndu -sh node_modules",
+      "commandNotes": [
+        {
+          "key": "wc -l",
+          "what": "Word count with the <code>-l</code> flag counts lines. Piped here to count how many entries are in node_modules.",
+          "when": "Counting lines of any output — log files, search results, lists."
+        },
+        {
+          "key": "du -sh",
+          "what": "Disk usage, summarized, human-readable. Shows total size of a folder.",
+          "when": "Checking how large a directory is before committing, archiving, or deleting it."
+        }
+      ],
+      "verify": "You see a directory count and total size. Even a simple chalk install pulls in multiple packages.",
+      "whenYoullReachForThis": [
+        "A Git push is taking forever or GitHub rejects it — you probably accidentally committed node_modules; check <code>.gitignore</code>",
+        "Setting up a project on a new machine — delete node_modules if it came with the repo, run <code>npm install</code> fresh",
+        "A project's disk footprint is unexpectedly large — <code>du -sh node_modules</code> usually explains it"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "Clean up",
+      "estimate": "5 min",
+      "body": "Delete the practice folder.",
+      "tryCue": "Run both.",
+      "code": "cd ~\nrm -rf node-practice",
+      "verify": "Folder is gone."
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "title": "MVE Academy",
   "subtitle": "Minimum Viable Engineer — a course for PMs who need to ship.",
-  "totalHours": 59,
+  "totalHours": 55,
   "totalWeeks": "5–6 weeks at 2 hrs/day",
   "phases": [
     {
@@ -17,7 +17,7 @@
       "id": "p2",
       "title": "Phase 2 — The Language Layer",
       "color": "teal",
-      "hours": 14,
+      "hours": 10,
       "weeks": "~1 week",
       "miniBuild": "A Node script that calls a free API and prints results to your terminal.",
       "modules": ["m4", "m5", "m6"]
@@ -91,19 +91,19 @@
       "id": "m4",
       "title": "JavaScript for Directors",
       "desc": "Read it, don't write it. Variables, functions, objects, arrays, async/await.",
-      "hours": 6,
+      "hours": 5,
       "phase": "p2",
-      "status": "coming-soon",
-      "unlocked": false
+      "status": "ready",
+      "unlocked": true
     },
     "m5": {
       "id": "m5",
       "title": "Node.js & npm",
       "desc": "How code runs outside the browser. Require, scripts, package.json.",
-      "hours": 4,
+      "hours": 3,
       "phase": "p2",
-      "status": "coming-soon",
-      "unlocked": false
+      "status": "ready",
+      "unlocked": true
     },
     "m6": {
       "id": "m6",
@@ -111,8 +111,8 @@
       "desc": "Structure, parsing, writing. The format everything on the web is built on.",
       "hours": 2,
       "phase": "p2",
-      "status": "coming-soon",
-      "unlocked": false
+      "status": "ready",
+      "unlocked": true
     },
     "m7": {
       "id": "m7",

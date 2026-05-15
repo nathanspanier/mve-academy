@@ -1,0 +1,286 @@
+{
+  "id": "m4",
+  "title": "JavaScript for Directors",
+  "phase": "Phase 2 — The Language Layer",
+  "phaseColor": "teal",
+  "estimate": "4–6 hr",
+  "prereqs": "M1–M3 complete",
+  "briefing": {
+    "headline": "Read it. Don't write it.",
+    "body": [
+      "Every app Claude builds for you will be JavaScript. When Claude explains what it did, writes a comment, names a function, or reports an error — that's JavaScript. You don't need to write it fluently. You need to read it well enough to know when it's wrong, ask the right follow-up, and give Claude useful constraints instead of vague directions.",
+      "This module is not JavaScript 101. It's the subset that matters for directing: variables, functions, objects, arrays, and async/await. Those five concepts cover ~80% of what you'll encounter in the code Claude ships. The rest you'll look up as needed."
+    ]
+  },
+  "reference": [
+    {
+      "title": "Variables: const vs let",
+      "type": "code",
+      "content": "const name = 'Riffle';      // can't be reassigned\nlet count = 0;              // can be reassigned\ncount = count + 1;          // fine\nname = 'Other';             // TypeError — const is final"
+    },
+    {
+      "title": "Function forms",
+      "type": "code",
+      "content": "// Declaration\nfunction greet(name) {\n  return 'Hello, ' + name;\n}\n\n// Arrow function (same thing, shorter)\nconst greet = (name) => {\n  return 'Hello, ' + name;\n};\n\n// Arrow with implicit return (single expression)\nconst greet = (name) => 'Hello, ' + name;"
+    },
+    {
+      "title": "Objects and arrays",
+      "type": "code",
+      "content": "// Object — key/value pairs\nconst catch = {\n  species: 'Rainbow Trout',\n  length: 18,\n  released: true\n};\n\ncatch.species;         // 'Rainbow Trout'\ncatch['length'];       // 18\n\n// Array — ordered list\nconst flies = ['Adams', 'Elk Hair Caddis', 'Pheasant Tail'];\nflies[0];              // 'Adams'\nflies.length;          // 3"
+    },
+    {
+      "title": "async/await in plain English",
+      "type": "text",
+      "content": "JavaScript runs one thing at a time, but some operations (API calls, file reads) take a while. <code>async/await</code> lets code pause and wait for a result without blocking everything else. A function marked <code>async</code> always returns a Promise. <code>await</code> inside it pauses that function until the Promise resolves. If the Promise rejects (error), <code>try/catch</code> catches it."
+    },
+    {
+      "title": "async/await pattern",
+      "type": "code",
+      "content": "async function fetchCatch(id) {\n  try {\n    const response = await fetch('/api/catches/' + id);\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Fetch failed:', error);\n  }\n}"
+    },
+    {
+      "title": "Array methods you'll see constantly",
+      "type": "code",
+      "content": "const catches = [14, 18, 22, 11];\n\ncatches.map(len => len * 2.54);   // convert to cm — new array\ncatches.filter(len => len > 15);  // only over 15\" — new array\ncatches.find(len => len > 20);    // first over 20\" — single value\ncatches.forEach(len => console.log(len)); // loop, no return"
+    },
+    {
+      "title": "\"undefined is not a function\"",
+      "type": "text",
+      "content": "You're calling something as a function that isn't one. Common cause: a typo in the function name, or calling a method on an object before it's been assigned. Ask Claude to add a <code>console.log</code> before the failing line to see what you actually have."
+    },
+    {
+      "title": "\"Cannot read properties of undefined\"",
+      "type": "text",
+      "content": "You're trying to access a property (e.g. <code>data.catches</code>) on something that is <code>undefined</code>. Usually means an API call returned nothing, a variable wasn't initialized, or you're accessing a nested property too early. Add <code>console.log(data)</code> before the failing line."
+    }
+  ],
+  "completion": {
+    "headline": "M4 complete.",
+    "body": "You can read JavaScript — variables, functions, objects, arrays, async/await. That's enough to direct Claude with precision and know when the code it ships is wrong. Next up: M5 — Node.js & npm.",
+    "nextModule": "m5"
+  },
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Open a scratch file",
+      "estimate": "5 min",
+      "body": "This module is read-first, run-second. You're not building anything — you're running small experiments to see how JavaScript actually behaves. Create a file to work in.",
+      "tryCue": "Run both lines.",
+      "code": "mkdir ~/js-scratch && cd ~/js-scratch\ntouch scratch.js",
+      "verify": "<code>ls</code> shows <code>scratch.js</code>. Open it in VS Code with <code>code .</code>.",
+      "commandNotes": [
+        {
+          "key": "mkdir ~/js-scratch && cd ~/js-scratch",
+          "what": "Creates the folder and immediately moves into it. The <code>&&</code> runs the second command only if the first succeeds.",
+          "when": "Any time you're creating a folder you immediately want to work in. Same pattern works for project setup."
+        }
+      ],
+      "whenYoullReachForThis": [
+        "Creating a quick scratch folder to test a Claude-generated snippet before adding it to a real project",
+        "Isolating a small piece of behavior — does this function return what I think it returns? — without touching your actual codebase",
+        "Prototyping a data transformation before Claude wires it into the app"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Variables: const and let",
+      "estimate": "20 min",
+      "body": "JavaScript has two variable types you'll use: <code>const</code> for values that don't change, <code>let</code> for values that do. You'll see <code>const</code> everywhere in modern code — most variables don't need to change after they're set. The third option, <code>var</code>, is old; Claude won't use it and neither should you.",
+      "tryCue": "Paste into <code>scratch.js</code> and run with <code>node scratch.js</code>.",
+      "code": "const species = 'Rainbow Trout';\nlet count = 0;\n\nconsole.log(species);\nconsole.log(count);\n\ncount = count + 1;\nconsole.log(count);\n\n// Try reassigning a const — uncomment to see the error\n// species = 'Brown Trout';",
+      "commandNotes": [
+        {
+          "key": "node scratch.js",
+          "what": "Runs the file with Node.js — JavaScript outside the browser. Every line executes top to bottom.",
+          "when": "Testing any <code>.js</code> file locally. The primary way you'll verify Claude's code before wiring it into an app."
+        },
+        {
+          "key": "console.log()",
+          "what": "Prints a value to the terminal. The most basic debugging tool in JavaScript.",
+          "when": "Whenever you want to see what a variable actually contains mid-execution. You'll use this constantly — even experienced engineers do."
+        }
+      ],
+      "verify": "Terminal shows <code>Rainbow Trout</code>, <code>0</code>, <code>1</code>. Uncomment the last line and run again — you get a <code>TypeError: Assignment to constant variable</code>.",
+      "whenYoullReachForThis": [
+        "Reading Claude's code and seeing <code>const apiKey = ...</code> — that value won't change anywhere in the function",
+        "Spotting a bug where a value should change but was declared <code>const</code> — tell Claude to switch it to <code>let</code>",
+        "Understanding why Claude named something with all-caps (<code>const MAX_RETRIES = 3</code>) — convention for constants that are configuration values"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Functions: declaration and arrow",
+      "estimate": "30 min",
+      "body": "Functions are reusable named chunks of logic. Claude writes them two ways: the <code>function</code> keyword (older, explicit) and arrow functions (<code>=></code>, more common in modern code). They behave nearly identically for your purposes — when you're reading code, they're interchangeable. The arrow form is shorter and you'll see it far more often.",
+      "tryCue": "Replace <code>scratch.js</code> contents with this. Run it.",
+      "code": "// Declaration style\nfunction formatCatch(species, length) {\n  return species + ' — ' + length + '\"';\n}\n\n// Arrow style — same thing\nconst formatCatchArrow = (species, length) => {\n  return species + ' — ' + length + '\"';\n};\n\n// Arrow with implicit return (one-liner)\nconst formatCatchShort = (species, length) => species + ' — ' + length + '\"';\n\nconsole.log(formatCatch('Rainbow Trout', 18));\nconsole.log(formatCatchArrow('Brown Trout', 14));\nconsole.log(formatCatchShort('Bull Trout', 22));",
+      "commandNotes": [
+        {
+          "key": "return",
+          "what": "Sends a value back to whoever called the function. Without <code>return</code>, the function returns <code>undefined</code>.",
+          "when": "If Claude's function produces no output when you expected one, <code>return</code> is often the missing piece."
+        },
+        {
+          "key": "implicit return (arrow shorthand)",
+          "what": "When an arrow function body is a single expression without curly braces, the result is returned automatically.",
+          "when": "You'll see this on short transformation functions — <code>items.map(item => item.name)</code>. No curly braces, no <code>return</code> keyword."
+        }
+      ],
+      "verify": "Terminal shows three formatted catch strings, one per function style.",
+      "whenYoullReachForThis": [
+        "Claude generates a helper function and you want to understand what it takes in and what it gives back — find the parameters and the <code>return</code>",
+        "A function produces <code>undefined</code> — check whether there's a <code>return</code> statement",
+        "Asking Claude to extract repeated logic into a function — tell it the input values and the expected output and let it pick the style"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Objects",
+      "estimate": "30 min",
+      "body": "Objects are collections of named values — the main way JavaScript organizes data. Almost everything Claude builds uses objects: an API response, a row of catch data, a config block. The key skill is reading them: finding a property, spotting a nested object, knowing what's optional vs. required.",
+      "tryCue": "Replace <code>scratch.js</code> with this. Run it.",
+      "code": "const catchLog = {\n  species: 'Rainbow Trout',\n  length: 18,\n  location: {\n    river: 'Yakima',\n    reach: 'Upper Canyon'\n  },\n  released: true,\n  flies: ['Elk Hair Caddis', 'Pheasant Tail']\n};\n\n// Access a property\nconsole.log(catchLog.species);\n\n// Access nested\nconsole.log(catchLog.location.river);\n\n// Access an array inside an object\nconsole.log(catchLog.flies[0]);\n\n// Add a property\ncatchLog.waterTemp = 52;\nconsole.log(catchLog.waterTemp);\n\n// Check all properties\nconsole.log(Object.keys(catchLog));",
+      "commandNotes": [
+        {
+          "key": "dot notation (obj.property)",
+          "what": "Access a property by name. The most common way to read object data.",
+          "when": "Anytime you're pulling a specific field out of an object — <code>response.data</code>, <code>user.email</code>, <code>catch.length</code>."
+        },
+        {
+          "key": "nested access (obj.a.b)",
+          "what": "Chain dot notation for nested objects. Each <code>.</code> goes one level deeper.",
+          "when": "API responses are frequently nested — <code>response.data.catches[0].species</code>. If this chain fails, one of the intermediate values is <code>undefined</code>."
+        },
+        {
+          "key": "Object.keys()",
+          "what": "Returns an array of all property names on the object.",
+          "when": "Exploring an unfamiliar object — paste it into a scratch file and <code>console.log(Object.keys(thing))</code> to see what's available."
+        }
+      ],
+      "verify": "Terminal shows <code>Rainbow Trout</code>, <code>Yakima</code>, <code>Elk Hair Caddis</code>, <code>52</code>, and an array of all property names.",
+      "whenYoullReachForThis": [
+        "Claude's code accesses <code>response.data.items</code> and fails — one of those properties doesn't exist, and you need to log the intermediate value to find out which",
+        "Asking Claude to add a field to an existing data structure — describe the object shape and where the new field fits",
+        "Reading a Claude-generated config object — understanding which keys are required vs. optional based on how they're used"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Arrays and the three methods",
+      "estimate": "30 min",
+      "body": "Arrays are ordered lists. You'll use them everywhere: a list of catches, a set of API results, a batch of transcript lines. Three array methods cover most of what you'll encounter in Claude's code: <code>map</code> (transform every item), <code>filter</code> (keep some items), <code>find</code> (get one item). The fourth — <code>forEach</code> — just loops.",
+      "tryCue": "Replace <code>scratch.js</code> with this. Run it. Read each output before moving on.",
+      "code": "const catches = [\n  { species: 'Rainbow Trout', length: 18 },\n  { species: 'Brown Trout', length: 14 },\n  { species: 'Bull Trout', length: 22 },\n  { species: 'Rainbow Trout', length: 11 }\n];\n\n// map — transform every item, return a new array\nconst labels = catches.map(c => c.species + ' ' + c.length + '\"');\nconsole.log('Labels:', labels);\n\n// filter — keep items that pass a test\nconst keepers = catches.filter(c => c.length >= 15);\nconsole.log('Keepers:', keepers);\n\n// find — first item that passes a test\nconst bigOne = catches.find(c => c.length > 20);\nconsole.log('Big one:', bigOne);\n\n// forEach — loop without producing a new array\ncatches.forEach(c => console.log(c.species, c.length + '\"'));",
+      "commandNotes": [
+        {
+          "key": "map()",
+          "what": "Returns a new array where each item is the result of the callback. Original array untouched.",
+          "when": "Transforming a list of API results into display strings, converting units, pulling one field out of each object."
+        },
+        {
+          "key": "filter()",
+          "what": "Returns a new array containing only items where the callback returns <code>true</code>.",
+          "when": "Removing items below a threshold, filtering by a category, hiding already-confirmed catches from the unreviewed list."
+        },
+        {
+          "key": "find()",
+          "what": "Returns the first matching item, not an array. Returns <code>undefined</code> if nothing matches.",
+          "when": "Looking up a single record by ID or condition. If it might not exist, check for <code>undefined</code> before accessing properties."
+        }
+      ],
+      "verify": "Terminal shows four sections: a labels array, two keeper objects, one big-fish object, and all four catches formatted individually.",
+      "whenYoullReachForThis": [
+        "Claude maps over an API response and you get <code>undefined</code> in the output — the property name inside the callback is wrong",
+        "The app is showing all catches instead of just today's — Claude needs a <code>filter()</code> on the date field",
+        "Asking Claude to find a specific catch in a list — that's a <code>find()</code>, give Claude the field and the matching value"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "async/await: the one concept that unlocks APIs",
+      "estimate": "45 min",
+      "body": "Almost everything interesting in an app — fetching data, calling Claude, reading a file — takes time. JavaScript handles that with <code>async/await</code>. An <code>async</code> function can pause at any <code>await</code> line until a result arrives. Without it, you'd try to use data before it exists. With it, code reads top-to-bottom like normal. The tricky part: forgetting <code>await</code> gives you a Promise object instead of the value you expected — and it won't error, it'll just behave wrong.",
+      "tryCue": "Replace <code>scratch.js</code> with this. Run it and watch the order of output.",
+      "code": "// Simulated async operation (pretend this is an API call)\nfunction delay(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nasync function fetchSpecies(id) {\n  console.log('Fetching species', id, '...');\n  await delay(500); // wait 500ms\n  return { id, species: 'Rainbow Trout', length: 18 };\n}\n\nasync function main() {\n  console.log('Start');\n\n  const result = await fetchSpecies(1);\n  console.log('Got:', result);\n\n  // What happens WITHOUT await — the Promise object, not the data\n  const missingAwait = fetchSpecies(2);\n  console.log('Without await:', missingAwait);\n\n  console.log('End');\n}\n\nmain();",
+      "commandNotes": [
+        {
+          "key": "async function",
+          "what": "Marks a function as asynchronous — it can use <code>await</code> inside and always returns a Promise.",
+          "when": "Any function that makes an API call, reads a file, or calls another <code>async</code> function needs to be <code>async</code>. Forgetting this gives you a syntax error when you try to use <code>await</code> inside."
+        },
+        {
+          "key": "await",
+          "what": "Pauses execution at this line until the Promise resolves. Gives you the value, not the Promise.",
+          "when": "Every time you call a function that returns a Promise — API calls, <code>fetch()</code>, Claude SDK calls, file operations. Skipping <code>await</code> is the most common async bug."
+        },
+        {
+          "key": "try/catch with async",
+          "what": "Catches errors from awaited operations. Without it, a failed API call crashes silently.",
+          "when": "Wrapping any <code>await</code> that could fail — network calls, file reads, external APIs. Claude should always generate this; if it doesn't, ask for it."
+        }
+      ],
+      "verify": "Output shows <code>Start</code>, then <code>Fetching species 1</code>, then a 500ms pause, then <code>Got: { id: 1, species: ... }</code>, then the Promise object (not data) for the missing-await case.",
+      "trouble": "If you see <code>SyntaxError: await is only valid in async functions</code> — you used <code>await</code> outside an <code>async</code> function. Wrap the calling code in <code>async function main() { ... }</code> and call <code>main()</code>.",
+      "whenYoullReachForThis": [
+        "Claude's API call returns a Promise object instead of data — a missing <code>await</code>; ask Claude to add it",
+        "The app shows undefined where a fetched value should be — the render happened before the async call finished; Claude needs to handle the loading state",
+        "Reading any Claude-generated function that calls the Anthropic SDK — every <code>client.messages.create()</code> is async and needs <code>await</code>"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "try/catch: error handling",
+      "estimate": "20 min",
+      "body": "<code>try/catch</code> is how JavaScript handles errors without crashing. The <code>try</code> block runs normally; if anything throws an error, execution jumps to <code>catch</code>. In production apps, every async operation should be wrapped in one. If Claude generates code without try/catch around API calls, ask for it — an unhandled network error will silently break the app.",
+      "tryCue": "Replace <code>scratch.js</code> with this. Run it twice — once as-is, once with <code>shouldFail = true</code>.",
+      "code": "const shouldFail = false;\n\nasync function fetchData() {\n  if (shouldFail) throw new Error('Network timeout');\n  return { species: 'Brown Trout', length: 16 };\n}\n\nasync function main() {\n  try {\n    const data = await fetchData();\n    console.log('Success:', data);\n  } catch (error) {\n    console.error('Something went wrong:', error.message);\n  } finally {\n    console.log('Always runs — cleanup goes here');\n  }\n}\n\nmain();",
+      "commandNotes": [
+        {
+          "key": "catch (error)",
+          "what": "Receives the thrown error object. <code>error.message</code> is the human-readable description.",
+          "when": "When diagnosing a Claude-generated error in production — log <code>error.message</code> and <code>error.stack</code> for full context."
+        },
+        {
+          "key": "finally",
+          "what": "Runs whether or not an error occurred. Good for cleanup — closing a connection, setting a loading state to false.",
+          "when": "Ask Claude to add a <code>finally</code> block when you need to guarantee something happens — resetting a spinner, logging completion."
+        }
+      ],
+      "verify": "First run: <code>Success: { species: 'Brown Trout', length: 16 }</code> plus the finally line. Second run (shouldFail = true): <code>Something went wrong: Network timeout</code> plus the finally line.",
+      "whenYoullReachForThis": [
+        "Claude's code has no error handling around an API call — ask it to wrap the <code>await</code> in try/catch with a useful error message",
+        "App crashes silently when the network is slow — add try/catch and log the error to understand what's happening",
+        "A loading spinner never goes away — <code>finally</code> block with <code>setLoading(false)</code> is the fix"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "Read real Claude-generated code",
+      "estimate": "30 min",
+      "body": "Everything you've done so far was synthetic. Now apply it. Ask Claude to generate a small function — something Riffle-adjacent — and read the output carefully. The goal isn't to modify it; it's to be able to explain what each line does.",
+      "tryCue": "Open Claude. Paste this prompt exactly.",
+      "code": "Write a JavaScript function called parseFishingEntry that takes a string like \"Caught a 16-inch brown trout on an elk hair caddis at the upper Yakima\" and returns an object with fields: species, length, fly, and location. Use regex or string parsing — whatever is simpler. Include try/catch. No explanation needed, just the function.",
+      "notes": [
+        "Read the function line by line.",
+        "Find: the parameters, the return value, any <code>await</code>, any <code>try/catch</code>.",
+        "Paste it into <code>scratch.js</code> and call it with a few test strings.",
+        "If something doesn't behave as expected, <code>console.log</code> the intermediate values."
+      ],
+      "verify": "You can explain, in plain English, what each section of the function does. You called it with at least two inputs and got back an object.",
+      "whenYoullReachForThis": [
+        "Any time Claude generates a non-trivial function — read it before running it; a 2-minute read saves a 20-minute debug",
+        "Building Riffle's transcript parsing — Claude will write the parsing logic; you direct the input format and the expected output shape",
+        "Code review with a collaborator — you need to be able to say \"this function takes X and returns Y\" without reading it aloud for the first time"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "Clean up",
+      "estimate": "5 min",
+      "body": "Delete the scratch folder. You won't need it again.",
+      "tryCue": "Run both.",
+      "code": "cd ~\nrm -rf js-scratch",
+      "verify": "Folder is gone."
+    }
+  ]
+}

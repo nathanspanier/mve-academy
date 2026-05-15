@@ -1,0 +1,179 @@
+{
+  "id": "m6",
+  "title": "JSON",
+  "phase": "Phase 2 — The Language Layer",
+  "phaseColor": "teal",
+  "estimate": "1–2 hr",
+  "prereqs": "M4 and M5 complete",
+  "briefing": {
+    "headline": "Every API speaks this. You should too.",
+    "body": [
+      "JSON is the format that APIs use to send data — requests you make, responses you receive, configuration files, the module files powering this course. When Claude returns a catch log structure, when the Anthropic API responds, when your app stores settings — it's JSON.",
+      "This is a short module. JSON is simple. The goal isn't mastery, it's fluency: read it without hesitating, write it correctly, spot errors fast. That's it."
+    ]
+  },
+  "reference": [
+    {
+      "title": "JSON types",
+      "type": "code",
+      "content": "{\n  \"string\": \"Rainbow Trout\",\n  \"number\": 18,\n  \"boolean\": true,\n  \"null\": null,\n  \"array\": [\"Adams\", \"Caddis\"],\n  \"object\": { \"river\": \"Yakima\", \"reach\": \"Upper\" }\n}"
+    },
+    {
+      "title": "JSON rules",
+      "type": "text",
+      "content": "Keys must be strings in double quotes. Strings must use double quotes (not single). No trailing commas after the last item. No comments. Numbers, booleans (<code>true</code>/<code>false</code>), and <code>null</code> are unquoted. These are the four most common parse errors."
+    },
+    {
+      "title": "Parse and stringify in JavaScript",
+      "type": "code",
+      "content": "// String → object\nconst obj = JSON.parse('{\"species\":\"Rainbow Trout\",\"length\":18}');\n\n// Object → string\nconst str = JSON.stringify(obj);\n\n// Pretty-print (for reading)\nconst pretty = JSON.stringify(obj, null, 2);"
+    },
+    {
+      "title": "Validate JSON from the terminal",
+      "type": "code",
+      "content": "# Check if a file is valid JSON\npython3 -m json.tool data.json\n\n# Pretty-print a JSON file\ncat data.json | python3 -m json.tool\n\n# With jq (if installed via brew)\ncat data.json | jq ."
+    },
+    {
+      "title": "\"Unexpected token\" or \"Unexpected end\"",
+      "type": "text",
+      "content": "Your JSON is malformed. Common causes: trailing comma on last item, single quotes instead of double, unquoted key. Paste the JSON into <a href=\"https://jsonlint.com\" target=\"_blank\">jsonlint.com</a> — it highlights the exact line."
+    },
+    {
+      "title": "\"Circular structure\" on JSON.stringify",
+      "type": "text",
+      "content": "The object you're trying to stringify references itself — a DOM node or an object with a back-reference. Claude should know to avoid this; if it happens, ask Claude to serialize only the specific fields you need rather than the whole object."
+    }
+  ],
+  "completion": {
+    "headline": "M6 complete. Phase 2 done.",
+    "body": "You can read, write, and validate JSON. Phase 2 — The Language Layer — is complete. Next up: M7 — APIs & HTTP.",
+    "nextModule": "m7"
+  },
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Read a JSON file",
+      "estimate": "15 min",
+      "body": "You've been working with JSON since M0 — the module files powering this course are JSON. Now look at one directly to see the format in isolation.",
+      "tryCue": "Run both commands.",
+      "code": "cat ~/mve-academy/data/m0.json | head -40\npython3 -m json.tool ~/mve-academy/data/m0.json | head -40",
+      "commandNotes": [
+        {
+          "key": "python3 -m json.tool",
+          "what": "Python's built-in JSON formatter. Validates the file and pretty-prints it with consistent indentation. No install required.",
+          "when": "Confirming a JSON file is valid before committing it. Faster than opening it in a browser. Works on any Mac."
+        },
+        {
+          "key": "head -40",
+          "what": "Shows only the first 40 lines of output. Keeps large files from flooding the terminal.",
+          "when": "Sampling a large file without printing the whole thing. Combine with <code>tail -40</code> to see the end."
+        }
+      ],
+      "verify": "Both commands produce output. The second command formats consistently — if there's a parse error, Python reports exactly which line.",
+      "trouble": "If <code>cat ~/mve-academy/data/m0.json</code> gives \"No such file or directory\" — your local repo is at a different path. Run <code>find ~ -name m0.json 2>/dev/null</code> to locate it.",
+      "whenYoullReachForThis": [
+        "Claude generates a JSON config file and you want to verify it's valid before deploying — <code>python3 -m json.tool file.json</code>",
+        "A JSON API response is one long line and unreadable — pipe it through <code>python3 -m json.tool</code> for formatted output",
+        "Confirming an MVE Academy module file is valid before running Cowork — this is the exact command to run"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Write JSON by hand",
+      "estimate": "20 min",
+      "body": "The rules are simple and the errors are predictable. Most JSON mistakes are: trailing commas, single quotes, or missing quotes on keys. Write a small JSON file by hand, then validate it.",
+      "tryCue": "Create this file exactly as shown. Then validate.",
+      "code": "cat > ~/catch.json << 'EOF'\n{\n  \"date\": \"2026-05-15\",\n  \"river\": \"Yakima\",\n  \"conditions\": {\n    \"waterTemp\": 52,\n    \"flow\": \"medium\",\n    \"sky\": \"overcast\"\n  },\n  \"catches\": [\n    {\n      \"species\": \"Rainbow Trout\",\n      \"length\": 18,\n      \"fly\": \"Elk Hair Caddis\",\n      \"released\": true\n    },\n    {\n      \"species\": \"Brown Trout\",\n      \"length\": 14,\n      \"fly\": \"Pheasant Tail\",\n      \"released\": true\n    }\n  ],\n  \"notes\": \"Good morning hatch. Switched to emerger at 10am.\"\n}\nEOF\n\npython3 -m json.tool ~/catch.json",
+      "verify": "Python formats and outputs the file with no errors. You see the nested structure clearly.",
+      "trouble": "If Python reports a parse error, it will name the line number. Common fix: a trailing comma on the last item in an array or object. Remove it and re-run.",
+      "whenYoullReachForThis": [
+        "Writing a Riffle catch entry manually to test the app's parser before voice transcripts exist",
+        "Creating a JSON fixture for testing — a fake but valid API response to develop against before the real API is connected",
+        "Editing an MVE Academy module file directly — same validation step applies"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Parse JSON in JavaScript",
+      "estimate": "20 min",
+      "body": "<code>JSON.parse()</code> converts a JSON string into a JavaScript object. <code>JSON.stringify()</code> does the reverse. These two functions are everywhere — reading API responses, saving state, logging structured data. The common mistake is calling a method on the string before parsing it.",
+      "tryCue": "Create and run this file.",
+      "code": "cat > ~/parse-practice.js << 'EOF'\n// Parse: string → object\nconst raw = '{\"species\":\"Rainbow Trout\",\"length\":18,\"released\":true}';\nconst catch1 = JSON.parse(raw);\n\nconsole.log(catch1.species);     // 'Rainbow Trout'\nconsole.log(catch1.length);      // 18\nconsole.log(typeof catch1);      // 'object'\n\n// Stringify: object → string\nconst asString = JSON.stringify(catch1);\nconsole.log(asString);           // compact\nconsole.log(typeof asString);    // 'string'\n\n// Pretty-print for logging\nconst pretty = JSON.stringify(catch1, null, 2);\nconsole.log(pretty);\n\n// Read the JSON file you just created\nimport { readFileSync } from 'fs';\nconst fileContents = readFileSync(process.env.HOME + '/catch.json', 'utf8');\nconst logEntry = JSON.parse(fileContents);\nconsole.log('Catches today:', logEntry.catches.length);\nconsole.log('First species:', logEntry.catches[0].species);\nEOF\n\nnode --input-type=module < ~/parse-practice.js",
+      "commandNotes": [
+        {
+          "key": "JSON.parse()",
+          "what": "Converts a JSON string into a live JavaScript object. Throws a <code>SyntaxError</code> if the string isn't valid JSON.",
+          "when": "Whenever you receive JSON from an API, a file, or user input — always parse before accessing properties."
+        },
+        {
+          "key": "JSON.stringify(obj, null, 2)",
+          "what": "Converts an object to a JSON string. The <code>null, 2</code> arguments add 2-space indentation for readability.",
+          "when": "Logging an object for debugging, saving state to a file, or sending data to an API."
+        },
+        {
+          "key": "readFileSync",
+          "what": "Node's synchronous file reader — reads the entire file as a string. Synchronous means it blocks until done, which is fine for small local files.",
+          "when": "Loading config files, JSON fixtures, or local data at startup. For large files or server code, use the async version."
+        }
+      ],
+      "verify": "Output shows the property values, the compact string, and the pretty-printed object. Last two lines show the catch count (2) and first species.",
+      "trouble": "If you get <code>SyntaxError: Unexpected token</code> from parse — the raw string has invalid JSON. Single quotes instead of double quotes is the most common cause.",
+      "whenYoullReachForThis": [
+        "Claude's code calls <code>response.json()</code> after a fetch — that's an async version of <code>JSON.parse()</code>, returning a Promise",
+        "An API returns a JSON string and the app fails on <code>.property</code> access — the response wasn't parsed; add <code>JSON.parse()</code>",
+        "Logging an object and seeing <code>[object Object]</code> — wrap it in <code>JSON.stringify(obj, null, 2)</code> to see the contents"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Intentionally break it",
+      "estimate": "15 min",
+      "body": "The fastest way to recognize JSON errors is to cause them on purpose. Each of these introduces a different category of mistake. Run them, read the error messages, remember them.",
+      "tryCue": "Run each block separately. Read the error each time.",
+      "code": "# Trailing comma\nnode -e \"JSON.parse('{\\\"a\\\": 1,}')\"\n\n# Single quotes\nnode -e \"JSON.parse(\\\"{'a': 1}\\\")\"\n\n# Unquoted key\nnode -e \"JSON.parse('{a: 1}')\"\n\n# Valid — control case\nnode -e \"console.log(JSON.parse('{\\\"a\\\": 1}'))\"",
+      "verify": "First three produce <code>SyntaxError: Unexpected token</code> with a position. The fourth outputs <code>{ a: 1 }</code>.",
+      "whenYoullReachForThis": [
+        "An API returns a parse error — these are the four categories to check first",
+        "Claude generates a JSON config and it fails to load — paste into <code>python3 -m json.tool</code> to identify the line",
+        "An MVE Academy module file breaks the Lab Bench — same four failure modes, same fix"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Install jq (optional but useful)",
+      "estimate": "10 min",
+      "tag": "Optional",
+      "tagOptional": true,
+      "body": "<code>jq</code> is a command-line tool for querying and filtering JSON. Not required, but useful when API responses are large and you want to pull a specific field without writing JavaScript.",
+      "tryCue": "Install and test.",
+      "code": "brew install jq\ncat ~/catch.json | jq '.catches[0].species'\ncat ~/catch.json | jq '.catches | length'\ncat ~/catch.json | jq '.catches[] | select(.length > 15)'",
+      "commandNotes": [
+        {
+          "key": "jq '.field'",
+          "what": "Extract a top-level field from JSON. Dot notation, same as JavaScript.",
+          "when": "Pulling one field from a large API response without writing a script."
+        },
+        {
+          "key": "jq '.array[] | select(.field > value)'",
+          "what": "Filter an array by a condition. The <code>.[]</code> iterates, <code>select()</code> keeps matching items.",
+          "when": "Filtering a list of API results from the terminal — checking which catches are over 15 inches without opening a script."
+        }
+      ],
+      "verify": "<code>jq '.catches[0].species'</code> outputs <code>\"Rainbow Trout\"</code>. The filter returns the 18-inch Rainbow Trout object.",
+      "whenYoullReachForThis": [
+        "An API response is 200 lines of JSON and you want one field — <code>curl ... | jq '.data.value'</code>",
+        "Exploring an unfamiliar API response structure — <code>cat response.json | jq 'keys'</code> shows top-level fields",
+        "Verifying a batch of Riffle catch entries — filter by species or length from the terminal"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "Clean up",
+      "estimate": "5 min",
+      "body": "Remove the scratch files.",
+      "tryCue": "Run both.",
+      "code": "rm ~/catch.json\nrm ~/parse-practice.js",
+      "verify": "Both files are gone. Run <code>ls ~/catch.json 2>/dev/null || echo 'Removed'</code> to confirm."
+    }
+  ]
+}
